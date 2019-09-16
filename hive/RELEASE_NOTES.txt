@@ -1,0 +1,13 @@
+
+Release Notes - Hive - Version 2.3.4
+
+
+
+** Bug
+    * [HIVE-18767] - Some alterPartitions invocations throw 'NumberFormatException: null'
+    * [HIVE-18778] - Needs to capture input/output entities in explain
+
+
+** New Feature
+    * [HIVE-20420] - Provide a fallback authorizer when no other authorizer is in use
+
