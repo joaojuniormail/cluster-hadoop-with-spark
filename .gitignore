@@ -1,0 +1,4 @@
+hdfs/*
+metastore_db/*
+!hdfs/service.txt
+!metastore_db/service.txt

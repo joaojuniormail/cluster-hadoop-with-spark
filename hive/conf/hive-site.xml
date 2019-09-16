@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<configuration>
+
+	<!-- START ACID ACTIVATE -->
+
+	<property>
+		<name>hive.exec.reducers.bytes.per.reducer</name>
+		<value>1000000000</value>
+	</property>
+
+	<property>
+		<name>hive.exec.reducers.max</name>
+		<value>20</value>
+	</property>
+
+	<property>
+		<name>mapreduce.job.reduces</name>
+		<value>5</value>
+	</property>
+
+	<property>
+		<name>hive.support.concurrency</name>
+		<value>true</value>
+	</property>
+
+	<property>
+		<name>hive.enforce.bucketing</name>
+		<value>true</value>
+	</property>
+
+	<property>
+		<name>hive.exec.dynamic.partition.mode</name>
+		<value>nonstrict</value>
+	</property>
+
+	<property>
+		<name>hive.txn.manager</name>
+		<value>org.apache.hadoop.hive.ql.lockmgr.DbTxnManager</value>
+	</property>
+
+	<property>
+		<name>hive.compactor.initiator.on</name>
+		<value>true</value>
+	</property>
+
+	<property>
+		<name>hive.compactor.worker.threads</name>
+		<value>1</value>
+	</property>
+
+	<!-- END ACID ACTIVATE -->
+
+
+	<property>
+		<name>hive.execution.engine</name>
+		<value>spark</value>
+	</property>
+
+	<property>
+		<name>spark.master</name>
+		<value>spark://hadoopmaster:7077</value>
+	</property>
+	
+	<property>
+		<name>spark.submit.deployMode</name>
+		<value>cluster</value>
+	</property>
+
+	<property>
+		<name>datanucleus.autoCreateSchema</name>
+		<value>true</value>
+	</property>
+
+	<property>
+		<name>datanucleus.fixedDatastore</name>
+		<value>true</value>
+	</property>
+
+	<property>
+		<name>datanucleus.autoCreateTables</name>
+		<value>true</value>
+	</property>
+
+	<property>
+		<name>spark.sql.warehouse.dir</name>
+		<value>hdfs://hadoopmaster:9000/user/hive/warehouse</value>
+		<description>location of default database for the warehouse</description>
+	</property>
+
+	<property>
+		<name>hive.server2.enable.doAs</name>
+		<value>false</value> 
+	</property>
+
+	<property>
+		<name>hive.metastore.uris</name>
+		<value>thrift://hadoopmaster:9083</value> 
+	</property>
+
+	<property>
+		<name>spark.sql.hive.metastore.jars</name>
+		<value>/services/hadoop/etc/hadoop:/services/hadoop/share/hadoop/common/lib/*:/services/hadoop/share/hadoop/common/*:/services/hadoop/share/hadoop/hdfs:/services/hadoop/share/hadoop/hdfs/lib/*:/services/hadoop/share/hadoop/hdfs/*:/services/hadoop/share/hadoop/yarn:/services/hadoop/share/hadoop/yarn/lib/*:/services/hadoop/share/hadoop/yarn/*:/services/hadoop/share/hadoop/mapreduce/lib/*:/services/hadoop/share/hadoop/mapreduce/*:/services/hadoop/contrib/capacity-scheduler/*.jar:/services/hive/lib/*.jar:/services/spark/jars/*.jar</value> 
+	</property>
+
+</configuration>
