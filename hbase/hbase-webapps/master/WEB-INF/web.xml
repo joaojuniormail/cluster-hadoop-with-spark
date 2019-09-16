@@ -7,13 +7,33 @@
 
 
     <servlet>
-        <servlet-name>org.apache.hadoop.hbase.generated.master.header_jsp</servlet-name>
-        <servlet-class>org.apache.hadoop.hbase.generated.master.header_jsp</servlet-class>
+        <servlet-name>org.apache.hadoop.hbase.generated.master.tablesDetailed_jsp</servlet-name>
+        <servlet-class>org.apache.hadoop.hbase.generated.master.tablesDetailed_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.hadoop.hbase.generated.master.zk_jsp</servlet-name>
+        <servlet-class>org.apache.hadoop.hbase.generated.master.zk_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.hadoop.hbase.generated.master.master_jsp</servlet-name>
+        <servlet-class>org.apache.hadoop.hbase.generated.master.master_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.hadoop.hbase.generated.master.snapshotsStats_jsp</servlet-name>
+        <servlet-class>org.apache.hadoop.hbase.generated.master.snapshotsStats_jsp</servlet-class>
     </servlet>
 
     <servlet>
         <servlet-name>org.apache.hadoop.hbase.generated.master.footer_jsp</servlet-name>
         <servlet-class>org.apache.hadoop.hbase.generated.master.footer_jsp</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>org.apache.hadoop.hbase.generated.master.snapshot_jsp</servlet-name>
+        <servlet-class>org.apache.hadoop.hbase.generated.master.snapshot_jsp</servlet-class>
     </servlet>
 
     <servlet>
@@ -27,23 +47,13 @@
     </servlet>
 
     <servlet>
-        <servlet-name>org.apache.hadoop.hbase.generated.master.redirect_jsp</servlet-name>
-        <servlet-class>org.apache.hadoop.hbase.generated.master.redirect_jsp</servlet-class>
+        <servlet-name>org.apache.hadoop.hbase.generated.master.rits_jsp</servlet-name>
+        <servlet-class>org.apache.hadoop.hbase.generated.master.rits_jsp</servlet-class>
     </servlet>
 
     <servlet>
-        <servlet-name>org.apache.hadoop.hbase.generated.master.snapshotsStats_jsp</servlet-name>
-        <servlet-class>org.apache.hadoop.hbase.generated.master.snapshotsStats_jsp</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>org.apache.hadoop.hbase.generated.master.table_jsp</servlet-name>
-        <servlet-class>org.apache.hadoop.hbase.generated.master.table_jsp</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>org.apache.hadoop.hbase.generated.master.zk_jsp</servlet-name>
-        <servlet-class>org.apache.hadoop.hbase.generated.master.zk_jsp</servlet-class>
+        <servlet-name>org.apache.hadoop.hbase.generated.master.header_jsp</servlet-name>
+        <servlet-class>org.apache.hadoop.hbase.generated.master.header_jsp</servlet-class>
     </servlet>
 
     <servlet>
@@ -52,33 +62,43 @@
     </servlet>
 
     <servlet>
-        <servlet-name>org.apache.hadoop.hbase.generated.master.snapshot_jsp</servlet-name>
-        <servlet-class>org.apache.hadoop.hbase.generated.master.snapshot_jsp</servlet-class>
+        <servlet-name>org.apache.hadoop.hbase.generated.master.redirect_jsp</servlet-name>
+        <servlet-class>org.apache.hadoop.hbase.generated.master.redirect_jsp</servlet-class>
     </servlet>
 
     <servlet>
-        <servlet-name>org.apache.hadoop.hbase.generated.master.master_jsp</servlet-name>
-        <servlet-class>org.apache.hadoop.hbase.generated.master.master_jsp</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>org.apache.hadoop.hbase.generated.master.rits_jsp</servlet-name>
-        <servlet-class>org.apache.hadoop.hbase.generated.master.rits_jsp</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>org.apache.hadoop.hbase.generated.master.tablesDetailed_jsp</servlet-name>
-        <servlet-class>org.apache.hadoop.hbase.generated.master.tablesDetailed_jsp</servlet-class>
+        <servlet-name>org.apache.hadoop.hbase.generated.master.table_jsp</servlet-name>
+        <servlet-class>org.apache.hadoop.hbase.generated.master.table_jsp</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>org.apache.hadoop.hbase.generated.master.header_jsp</servlet-name>
-        <url-pattern>/header.jsp</url-pattern>
+        <servlet-name>org.apache.hadoop.hbase.generated.master.tablesDetailed_jsp</servlet-name>
+        <url-pattern>/tablesDetailed.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.hadoop.hbase.generated.master.zk_jsp</servlet-name>
+        <url-pattern>/zk.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.hadoop.hbase.generated.master.master_jsp</servlet-name>
+        <url-pattern>/master.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.hadoop.hbase.generated.master.snapshotsStats_jsp</servlet-name>
+        <url-pattern>/snapshotsStats.jsp</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>org.apache.hadoop.hbase.generated.master.footer_jsp</servlet-name>
         <url-pattern>/footer.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.hadoop.hbase.generated.master.snapshot_jsp</servlet-name>
+        <url-pattern>/snapshot.jsp</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
@@ -92,23 +112,13 @@
     </servlet-mapping>
 
     <servlet-mapping>
-        <servlet-name>org.apache.hadoop.hbase.generated.master.redirect_jsp</servlet-name>
-        <url-pattern>/redirect.jsp</url-pattern>
+        <servlet-name>org.apache.hadoop.hbase.generated.master.rits_jsp</servlet-name>
+        <url-pattern>/rits.jsp</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
-        <servlet-name>org.apache.hadoop.hbase.generated.master.snapshotsStats_jsp</servlet-name>
-        <url-pattern>/snapshotsStats.jsp</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>org.apache.hadoop.hbase.generated.master.table_jsp</servlet-name>
-        <url-pattern>/table.jsp</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>org.apache.hadoop.hbase.generated.master.zk_jsp</servlet-name>
-        <url-pattern>/zk.jsp</url-pattern>
+        <servlet-name>org.apache.hadoop.hbase.generated.master.header_jsp</servlet-name>
+        <url-pattern>/header.jsp</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
@@ -117,23 +127,13 @@
     </servlet-mapping>
 
     <servlet-mapping>
-        <servlet-name>org.apache.hadoop.hbase.generated.master.snapshot_jsp</servlet-name>
-        <url-pattern>/snapshot.jsp</url-pattern>
+        <servlet-name>org.apache.hadoop.hbase.generated.master.redirect_jsp</servlet-name>
+        <url-pattern>/redirect.jsp</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
-        <servlet-name>org.apache.hadoop.hbase.generated.master.master_jsp</servlet-name>
-        <url-pattern>/master.jsp</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>org.apache.hadoop.hbase.generated.master.rits_jsp</servlet-name>
-        <url-pattern>/rits.jsp</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>org.apache.hadoop.hbase.generated.master.tablesDetailed_jsp</servlet-name>
-        <url-pattern>/tablesDetailed.jsp</url-pattern>
+        <servlet-name>org.apache.hadoop.hbase.generated.master.table_jsp</servlet-name>
+        <url-pattern>/table.jsp</url-pattern>
     </servlet-mapping>
 
 </web-app>

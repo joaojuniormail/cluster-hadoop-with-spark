@@ -335,6 +335,7 @@ Shell.load_command_group(
     is_in_maintenance_mode
     close_region
     compact
+    compaction_switch
     flush
     major_compact
     move
@@ -360,6 +361,10 @@ Shell.load_command_group(
     clear_block_cache
     stop_master
     stop_regionserver
+    rit
+    list_decommissioned_regionservers
+    decommission_regionservers
+    recommission_regionserver
   ],
   # TODO: remove older hlog_roll command
   aliases: {
@@ -382,9 +387,13 @@ Shell.load_command_group(
     append_peer_namespaces
     remove_peer_namespaces
     set_peer_exclude_namespaces
+    append_peer_exclude_namespaces
+    remove_peer_exclude_namespaces
     show_peer_tableCFs
     set_peer_tableCFs
     set_peer_exclude_tableCFs
+    append_peer_exclude_tableCFs
+    remove_peer_exclude_tableCFs
     set_peer_bandwidth
     list_replicated_tables
     append_peer_tableCFs
@@ -430,6 +439,10 @@ Shell.load_command_group(
     list_quota_table_sizes
     list_quota_snapshots
     list_snapshot_sizes
+    enable_rpc_throttle
+    disable_rpc_throttle
+    enable_exceed_throttle_quota
+    disable_exceed_throttle_quota
   ]
 )
 

@@ -126,6 +126,8 @@ module Shell
         handle_exceptions(cause, *args) if respond_to?(:handle_exceptions)
         # Global HBase exception handling below if not handled by respective command above
         if cause.is_a?(org.apache.hadoop.hbase.TableNotFoundException)
+          strs = cause.to_s.split(' ')
+          raise "Unknown table #{strs[0]}!" if strs.size == 1
           raise "Unknown table #{args.first}!"
         end
         if cause.is_a?(org.apache.hadoop.hbase.TableNotEnabledException)
@@ -166,6 +168,22 @@ module Shell
           # This is to parse and get the error message from the whole.
           strs = str.split("\n")
           raise (strs[0]).to_s unless strs.empty?
+        end
+        if cause.is_a?(org.apache.hadoop.hbase.quotas.SpaceLimitingException)
+          strs = cause.message.split("\n")
+          raise(strs[0]).to_s unless strs.empty?
+        end
+        if cause.is_a?(org.apache.hadoop.hbase.client.RetriesExhaustedException)
+          str = cause.cause.to_s
+          regex = /.*RpcThrottlingException: (?<message>[^\n]+).*/
+          error = regex.match(str)
+          raise error[:message].capitalize unless error.nil?
+        end
+        if cause.is_a?(org.apache.hadoop.hbase.DoNotRetryIOException)
+          regex = /.*UnsupportedOperationException: quota support disabled.*/
+          error = regex.match(cause.message)
+          error_msg = 'Quota Support disabled. Please enable in configuration.'
+          raise error_msg unless error.nil?
         end
 
         # Throw the other exception which hasn't been handled above

@@ -21,35 +21,4 @@
  */
 -->
 <configuration>
-
-	<property>
-		<name>hbase.unsafe.stream.capability.enforce</name>
-		<value>false</value>
-	</property>
-
-	<property>
-		<name>hbase.master</name>
-		<value>hadoopmaster:60000</value>
-	</property>
-
-	<property>
-		<name>hbase.rootdir</name>
-		<value>hdfs://hadoopmaster:9000/hbase</value>
-	</property>
-
-	<property>
-		<name>hbase.cluster.distributed</name>
-		<value>true</value>
-	</property>
-
-	<property>
-		<name>hbase.zookeeper.quorum</name>
-		<value>hadoopmaster,abutre,anarquia</value>
-	</property>
-
-	<property>
-		<name>hbase.zookeeper.property.dataDir</name>
-		<value>/tmp/zookeeper</value>
-	</property>
-
 </configuration>

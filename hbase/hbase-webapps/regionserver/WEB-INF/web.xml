@@ -7,11 +7,6 @@
 
 
     <servlet>
-        <servlet-name>org.apache.hadoop.hbase.generated.regionserver.header_jsp</servlet-name>
-        <servlet-class>org.apache.hadoop.hbase.generated.regionserver.header_jsp</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>org.apache.hadoop.hbase.generated.regionserver.footer_jsp</servlet-name>
         <servlet-class>org.apache.hadoop.hbase.generated.regionserver.footer_jsp</servlet-class>
     </servlet>
@@ -22,8 +17,8 @@
     </servlet>
 
     <servlet>
-        <servlet-name>org.apache.hadoop.hbase.generated.regionserver.regionserver_jsp</servlet-name>
-        <servlet-class>org.apache.hadoop.hbase.generated.regionserver.regionserver_jsp</servlet-class>
+        <servlet-name>org.apache.hadoop.hbase.generated.regionserver.processRS_jsp</servlet-name>
+        <servlet-class>org.apache.hadoop.hbase.generated.regionserver.processRS_jsp</servlet-class>
     </servlet>
 
     <servlet>
@@ -32,14 +27,14 @@
     </servlet>
 
     <servlet>
-        <servlet-name>org.apache.hadoop.hbase.generated.regionserver.processRS_jsp</servlet-name>
-        <servlet-class>org.apache.hadoop.hbase.generated.regionserver.processRS_jsp</servlet-class>
+        <servlet-name>org.apache.hadoop.hbase.generated.regionserver.header_jsp</servlet-name>
+        <servlet-class>org.apache.hadoop.hbase.generated.regionserver.header_jsp</servlet-class>
     </servlet>
 
-    <servlet-mapping>
-        <servlet-name>org.apache.hadoop.hbase.generated.regionserver.header_jsp</servlet-name>
-        <url-pattern>/header.jsp</url-pattern>
-    </servlet-mapping>
+    <servlet>
+        <servlet-name>org.apache.hadoop.hbase.generated.regionserver.regionserver_jsp</servlet-name>
+        <servlet-class>org.apache.hadoop.hbase.generated.regionserver.regionserver_jsp</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>org.apache.hadoop.hbase.generated.regionserver.footer_jsp</servlet-name>
@@ -52,8 +47,8 @@
     </servlet-mapping>
 
     <servlet-mapping>
-        <servlet-name>org.apache.hadoop.hbase.generated.regionserver.regionserver_jsp</servlet-name>
-        <url-pattern>/regionserver.jsp</url-pattern>
+        <servlet-name>org.apache.hadoop.hbase.generated.regionserver.processRS_jsp</servlet-name>
+        <url-pattern>/processRS.jsp</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
@@ -62,8 +57,13 @@
     </servlet-mapping>
 
     <servlet-mapping>
-        <servlet-name>org.apache.hadoop.hbase.generated.regionserver.processRS_jsp</servlet-name>
-        <url-pattern>/processRS.jsp</url-pattern>
+        <servlet-name>org.apache.hadoop.hbase.generated.regionserver.header_jsp</servlet-name>
+        <url-pattern>/header.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>org.apache.hadoop.hbase.generated.regionserver.regionserver_jsp</servlet-name>
+        <url-pattern>/regionserver.jsp</url-pattern>
     </servlet-mapping>
 
 </web-app>

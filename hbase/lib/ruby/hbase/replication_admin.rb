@@ -205,6 +205,38 @@ module Hbase
       @admin.removeReplicationPeerTableCFs(id, map)
     end
 
+    # Append exclude-tableCFs to the exclude-tableCFs config for the specified peer
+    def append_peer_exclude_tableCFs(id, excludeTableCFs)
+      unless excludeTableCFs.nil?
+        # convert tableCFs to TableName
+        map = java.util.HashMap.new
+        excludeTableCFs.each do |key, val|
+          map.put(org.apache.hadoop.hbase.TableName.valueOf(key), val)
+        end
+        rpc = get_peer_config(id)
+        unless rpc.nil?
+          rpc = ReplicationPeerConfigUtil.appendExcludeTableCFsToReplicationPeerConfig(map, rpc)
+          @admin.updateReplicationPeerConfig(id, rpc)
+        end
+      end
+    end
+
+    # Remove some exclude-tableCFs from the exclude-tableCFs config for the specified peer
+    def remove_peer_exclude_tableCFs(id, excludeTableCFs)
+      unless excludeTableCFs.nil?
+        # convert tableCFs to TableName
+        map = java.util.HashMap.new
+        excludeTableCFs.each do |key, val|
+          map.put(org.apache.hadoop.hbase.TableName.valueOf(key), val)
+        end
+        rpc = get_peer_config(id)
+        unless rpc.nil?
+          rpc = ReplicationPeerConfigUtil.removeExcludeTableCFsFromReplicationPeerConfig(map, rpc, id)
+          @admin.updateReplicationPeerConfig(id, rpc)
+        end
+      end
+    end
+
     # Set new namespaces config for the specified peer
     def set_peer_namespaces(id, namespaces)
       unless namespaces.nil?
@@ -279,6 +311,45 @@ module Hbase
       unless rpc.nil?
         rpc.setBandwidth(bandwidth)
         @admin.updateReplicationPeerConfig(id, rpc)
+      end
+    end
+
+    # Append exclude namespaces config for the specified peer
+    def append_peer_exclude_namespaces(id, namespaces)
+      unless namespaces.nil?
+        rpc = get_peer_config(id)
+        unless rpc.nil?
+          if rpc.getExcludeNamespaces.nil?
+            ns_set = java.util.HashSet.new
+          else
+            ns_set = java.util.HashSet.new(rpc.getExcludeNamespaces)
+          end
+          namespaces.each do |n|
+            ns_set.add(n)
+          end
+          builder = ReplicationPeerConfig.newBuilder(rpc)
+          builder.setExcludeNamespaces(ns_set)
+          @admin.updateReplicationPeerConfig(id, builder.build)
+        end
+      end
+    end
+
+    # Remove exclude namespaces config for the specified peer
+    def remove_peer_exclude_namespaces(id, namespaces)
+      unless namespaces.nil?
+        rpc = get_peer_config(id)
+        unless rpc.nil?
+          ns_set = rpc.getExcludeNamespaces
+          unless ns_set.nil?
+            ns_set = java.util.HashSet.new(ns_set)
+            namespaces.each do |n|
+              ns_set.remove(n)
+            end
+          end
+          builder = ReplicationPeerConfig.newBuilder(rpc)
+          builder.setExcludeNamespaces(ns_set)
+          @admin.updateReplicationPeerConfig(id, builder.build)
+        end
       end
     end
 

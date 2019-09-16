@@ -34,8 +34,8 @@ EOF
         formatter.header(%w[PID Name State Submitted Last_Update Parameters])
         list = JSON.parse(admin.list_procedures)
         list.each do |proc|
-          submitted_time = Time.at(Integer(proc['submittedTime'])/1000).to_s
-          last_update = Time.at(Integer(proc['lastUpdate'])/1000).to_s
+          submitted_time = Time.at(Integer(proc['submittedTime']) / 1000).to_s
+          last_update = Time.at(Integer(proc['lastUpdate']) / 1000).to_s
           formatter.row([proc['procId'], proc['className'], proc['state'],
                          submitted_time, last_update, proc['stateMessage']])
         end

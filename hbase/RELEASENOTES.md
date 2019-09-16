@@ -1,4 +1,4 @@
-# HBASE  2.1.2 Release Notes
+# RELEASENOTES
 
 <!---
 # Licensed to the Apache Software Foundation (ASF) under one
@@ -16,10 +16,768 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
--->
 
+# Be careful doing manual edits in this file. Do not change format
+# of release header or remove the below marker. This file is generated.
+# DO NOT REMOVE THIS MARKER; FOR INTERPOLATING CHANGES!-->
+# HBASE  2.2.0 Release Notes
 
 These release notes cover new developer and user-facing incompatibilities, important issues, features, and major improvements.
+
+
+---
+
+* [HBASE-21970](https://issues.apache.org/jira/browse/HBASE-21970) | *Major* | **Document that how to upgrade from 2.0 or 2.1 to 2.2+**
+
+See the document http://hbase.apache.org/book.html#upgrade2.2 about how to upgrade from 2.0 or 2.1 to 2.2+.
+
+HBase 2.2+ uses a new Procedure form assiging/unassigning/moving Regions. It does not process HBase 2.1 and 2.0's Unassign/Assign Procedure types. Upgrade requires that we first drain the Master Procedure Store of old style Procedures before starting the new 2.2 Master. So you need to make sure that before you kill the old version (2.0 or 2.1) Master, there is no region in transition. And once the new version (2.2+) Master is up, you can rolling upgrade RegionServers one by one. 
+
+And there is a more safer way if you are running 2.1.1+ or 2.0.3+ cluster. It need four steps to upgrade Master.
+
+1. Shutdown both active and standby Masters (Your cluster will continue to server reads and writes without interruption).
+2. Set the property hbase.procedure.upgrade-to-2-2 to true in hbase-site.xml for the Master, and start only one Master, still using the 2.1.1+ (or 2.0.3+) version.
+3. Wait until the Master quits. Confirm that there is a 'READY TO ROLLING UPGRADE' message in the Master log as the cause of the shutdown. The Procedure Store is now empty.
+4. Start new Masters with the new 2.2+ version.
+
+Then you can rolling upgrade RegionServers one by one. See HBASE-21075 for more details.
+
+
+---
+
+* [HBASE-21536](https://issues.apache.org/jira/browse/HBASE-21536) | *Trivial* | **Fix completebulkload usage instructions**
+
+Added completebulkload short name for BulkLoadHFilesTool to bin/hbase.
+
+
+---
+
+* [HBASE-22500](https://issues.apache.org/jira/browse/HBASE-22500) | *Blocker* | **Modify pom and jenkins jobs for hadoop versions**
+
+Change the default hadoop-3 version to 3.1.2. Drop the support for the releases which are effected by CVE-2018-8029, see this email https://lists.apache.org/thread.html/3d6831c3893cd27b6850aea2feff7d536888286d588e703c6ffd2e82@%3Cuser.hadoop.apache.org%3E
+
+
+---
+
+* [HBASE-22148](https://issues.apache.org/jira/browse/HBASE-22148) | *Blocker* | **Provide an alternative to CellUtil.setTimestamp**
+
+<!-- markdown -->
+
+The `CellUtil.setTimestamp` method changes to be an API with audience `LimitedPrivate(COPROC)` in HBase 3.0. With that designation the API should remain stable within a given minor release line, but may change between minor releases.
+
+Previously, this method was deprecated in HBase 2.0 for removal in HBase 3.0. Deprecation messages in HBase 2.y releases have been updated to indicate the expected API audience change.
+
+
+---
+
+* [HBASE-21991](https://issues.apache.org/jira/browse/HBASE-21991) | *Major* | **Fix MetaMetrics issues - [Race condition, Faulty remove logic], few improvements**
+
+The class LossyCounting was unintentionally marked Public but was never intended to be part of our public API. This oversight has been corrected and LossyCounting is now marked as Private and going forward may be subject to additional breaking changes or removal without notice. If you have taken a dependency on this class we recommend cloning it locally into your project before upgrading to this release.
+
+
+---
+
+* [HBASE-22226](https://issues.apache.org/jira/browse/HBASE-22226) | *Trivial* | **Incorrect level for headings in asciidoc**
+
+Warnings for level headings are corrected in the book for the HBase Incompatibilities section.
+
+
+---
+
+* [HBASE-20970](https://issues.apache.org/jira/browse/HBASE-20970) | *Major* | **Update hadoop check versions for hadoop3 in hbase-personality**
+
+Add hadoop 3.0.3, 3.1.1 3.1.2 in our hadoop check jobs.
+
+
+---
+
+* [HBASE-21784](https://issues.apache.org/jira/browse/HBASE-21784) | *Major* | **Dump replication queue should show list of wal files ordered chronologically**
+
+The DumpReplicationQueues tool will now list replication queues sorted in chronological order.
+
+
+---
+
+* [HBASE-22384](https://issues.apache.org/jira/browse/HBASE-22384) | *Minor* | **Formatting issues in administration section of book**
+
+Fixes a formatting issue in the administration section of the book, where listing indentation were a little bit off.
+
+
+---
+
+* [HBASE-22399](https://issues.apache.org/jira/browse/HBASE-22399) | *Major* | **Change default hadoop-two.version to 2.8.x and remove the 2.7.x hadoop checks**
+
+Now the default hadoop-two.version has been changed to 2.8.5, and all hadoop versions before 2.8.2(exclude) will not be supported any more.
+
+
+---
+
+* [HBASE-22392](https://issues.apache.org/jira/browse/HBASE-22392) | *Trivial* | **Remove extra/useless +**
+
+Removed extra + in HRegion, HStore and LoadIncrementalHFiles for branch-2 and HRegion and HStore for branch-1.
+
+
+---
+
+* [HBASE-20494](https://issues.apache.org/jira/browse/HBASE-20494) | *Major* | **Upgrade com.yammer.metrics dependency**
+
+Updated metrics core from 3.2.1 to 3.2.6.
+
+
+---
+
+* [HBASE-22358](https://issues.apache.org/jira/browse/HBASE-22358) | *Minor* | **Change rubocop configuration for method length**
+
+The rubocop definition for the maximum method length was set to 75.
+
+
+---
+
+* [HBASE-22379](https://issues.apache.org/jira/browse/HBASE-22379) | *Minor* | **Fix Markdown for "Voting on Release Candidates" in book**
+
+Fixes the formatting of the "Voting on Release Candidates" to actually show the quote and code formatting of the RAT check.
+
+
+---
+
+* [HBASE-20851](https://issues.apache.org/jira/browse/HBASE-20851) | *Minor* | **Change rubocop config for max line length of 100**
+
+The rubocop configuration in the hbase-shell module now allows a line length with 100 characters, instead of 80 as before. For everything before 2.1.5 this change introduces rubocop itself.
+
+
+---
+
+* [HBASE-22054](https://issues.apache.org/jira/browse/HBASE-22054) | *Minor* | **Space Quota: Compaction is not working for super user in case of NO\_WRITES\_COMPACTIONS**
+
+This change allows the system and superusers to initiate compactions, even when a space quota violation policy disallows compactions from happening. The original intent behind disallowing of compactions was to prevent end-user compactions from creating undue I/O load, not disallowing \*any\* compaction in the system.
+
+
+---
+
+* [HBASE-22292](https://issues.apache.org/jira/browse/HBASE-22292) | *Blocker* | **PreemptiveFastFailInterceptor clean repeatedFailuresMap issue**
+
+Adds new configuration hbase.client.failure.map.cleanup.interval which defaults to ten minutes.
+
+
+---
+
+* [HBASE-22155](https://issues.apache.org/jira/browse/HBASE-22155) | *Major* | **Move 2.2.0 on to hbase-thirdparty-2.2.0**
+
+ Updates libs used internally by hbase via hbase-thirdparty as follows:
+
+ gson 2.8.1 -\\\> 2.8.5
+ guava 22.0 -\\\> 27.1-jre
+ pb 3.5.1 -\\\> 3.7.0
+ netty 4.1.17 -\\\> 4.1.34
+ commons-collections4 4.1 -\\\> 4.3
+
+
+---
+
+* [HBASE-22178](https://issues.apache.org/jira/browse/HBASE-22178) | *Major* | **Introduce a createTableAsync with TableDescriptor method in Admin**
+
+Introduced
+
+Future\<Void\> createTableAsync(TableDescriptor);
+
+
+---
+
+* [HBASE-22108](https://issues.apache.org/jira/browse/HBASE-22108) | *Major* | **Avoid passing null in Admin methods**
+
+Introduced these methods:
+void move(byte[]);
+void move(byte[], ServerName);
+Future\<Void\> splitRegionAsync(byte[]);
+
+These methods are deprecated:
+void move(byte[], byte[])
+
+
+---
+
+* [HBASE-22152](https://issues.apache.org/jira/browse/HBASE-22152) | *Major* | **Create a jenkins file for yetus to processing GitHub PR**
+
+Add a new jenkins file for running pre commit check for GitHub PR.
+
+
+---
+
+* [HBASE-22007](https://issues.apache.org/jira/browse/HBASE-22007) | *Major* | **Add restoreSnapshot and cloneSnapshot with acl methods in AsyncAdmin**
+
+Add cloneSnapshot/restoreSnapshot with acl methods in AsyncAdmin.
+
+
+---
+
+* [HBASE-22123](https://issues.apache.org/jira/browse/HBASE-22123) | *Minor* | **REST gateway reports Insufficient permissions exceptions as 404 Not Found**
+
+When insufficient permissions, you now get:
+
+HTTP/1.1 403 Forbidden
+
+on the HTTP side, and in the message
+
+Forbidden
+org.apache.hadoop.hbase.security.AccessDeniedException: org.apache.hadoop.hbase.security.AccessDeniedException: Insufficient permissions for user ‘myuser',action: get, tableName:mytable, family:cf.
+at org.apache.ranger.authorization.hbase.RangerAuthorizationCoprocessor.authorizeAccess(RangerAuthorizationCoprocessor.java:547)
+and the rest of the ADE stack
+
+
+---
+
+* [HBASE-22100](https://issues.apache.org/jira/browse/HBASE-22100) | *Minor* | **False positive for error prone warnings in pre commit job**
+
+Now we will sort the javac WARNING/ERROR before generating diff in pre-commit so we can get a stable output for the error prone. The downside is that we just sort the output lexicographically so the line number will also be sorted lexicographically, which is a bit strange to human.
+
+
+---
+
+* [HBASE-22057](https://issues.apache.org/jira/browse/HBASE-22057) | *Major* | **Impose upper-bound on size of ZK ops sent in a single multi()**
+
+Exposes a new configuration property "zookeeper.multi.max.size" which dictates the maximum size of deletes that HBase will make to ZooKeeper in a single RPC. This property defaults to 1MB, which should fall beneath the default ZooKeeper limit of 2MB, controlled by "jute.maxbuffer".
+
+
+---
+
+* [HBASE-22052](https://issues.apache.org/jira/browse/HBASE-22052) | *Major* | **pom cleaning; filter out jersey-core in hadoop2 to match hadoop3 and remove redunant version specifications**
+
+<!-- markdown -->
+Fixed awkward dependency issue that prevented site building.
+
+#### note specific to HBase 2.1.4
+HBase 2.1.4 shipped with an early version of this fix that incorrectly altered the libraries included in our binary assembly for using Apache Hadoop 2.7 (the current build default Hadoop version for 2.1.z). For folks running out of the box against a Hadoop 2.7 cluster (or folks who skip the installation step of [replacing the bundled Hadoop libraries](http://hbase.apache.org/book.html#hadoop)) this will result in a failure at Region Server startup due to a missing class definition. e.g.:
+```
+2019-03-27 09:02:05,779 ERROR [main] regionserver.HRegionServer: Failed construction RegionServer
+java.lang.NoClassDefFoundError: org/apache/htrace/SamplerBuilder
+	at org.apache.hadoop.hdfs.DFSClient.<init>(DFSClient.java:644)
+	at org.apache.hadoop.hdfs.DFSClient.<init>(DFSClient.java:628)
+	at org.apache.hadoop.hdfs.DistributedFileSystem.initialize(DistributedFileSystem.java:149)
+	at org.apache.hadoop.fs.FileSystem.createFileSystem(FileSystem.java:2667)
+	at org.apache.hadoop.fs.FileSystem.access$200(FileSystem.java:93)
+	at org.apache.hadoop.fs.FileSystem$Cache.getInternal(FileSystem.java:2701)
+	at org.apache.hadoop.fs.FileSystem$Cache.get(FileSystem.java:2683)
+	at org.apache.hadoop.fs.FileSystem.get(FileSystem.java:372)
+	at org.apache.hadoop.fs.FileSystem.get(FileSystem.java:171)
+	at org.apache.hadoop.fs.FileSystem.get(FileSystem.java:356)
+	at org.apache.hadoop.fs.Path.getFileSystem(Path.java:295)
+	at org.apache.hadoop.hbase.util.CommonFSUtils.getRootDir(CommonFSUtils.java:362)
+	at org.apache.hadoop.hbase.util.CommonFSUtils.isValidWALRootDir(CommonFSUtils.java:411)
+	at org.apache.hadoop.hbase.util.CommonFSUtils.getWALRootDir(CommonFSUtils.java:387)
+	at org.apache.hadoop.hbase.regionserver.HRegionServer.initializeFileSystem(HRegionServer.java:704)
+	at org.apache.hadoop.hbase.regionserver.HRegionServer.<init>(HRegionServer.java:613)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.apache.hadoop.hbase.regionserver.HRegionServer.constructRegionServer(HRegionServer.java:3029)
+	at org.apache.hadoop.hbase.regionserver.HRegionServerCommandLine.start(HRegionServerCommandLine.java:63)
+	at org.apache.hadoop.hbase.regionserver.HRegionServerCommandLine.run(HRegionServerCommandLine.java:87)
+	at org.apache.hadoop.util.ToolRunner.run(ToolRunner.java:70)
+	at org.apache.hadoop.hbase.util.ServerCommandLine.doMain(ServerCommandLine.java:149)
+	at org.apache.hadoop.hbase.regionserver.HRegionServer.main(HRegionServer.java:3047)
+Caused by: java.lang.ClassNotFoundException: org.apache.htrace.SamplerBuilder
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:349)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+	... 26 more
+
+```
+
+Workaround via any _one_ of the following:
+* If you are running against a Hadoop cluster that is 2.8+, ensure you replace the Hadoop libaries in the default binary assembly with those for your version.
+* If you are running against a Hadoop cluster that is 2.8+, build the binary assembly from the source release while specifying your Hadoop version.
+* If you are running against a Hadoop cluster that is a supported 2.7 release, ensure the `hadoop` executable is in the `PATH` seen at Region Server startup and that you are not using the `HBASE_DISABLE_HADOOP_CLASSPATH_LOOKUP` bypass.
+* For any supported Hadoop version, manually make the Apache HTrace artifact `htrace-core-3.1.0-incubating.jar` available to all Region Servers via the HBASE_CLASSPATH environment variable.
+* For any supported Hadoop version, manually make the Apache HTrace artifact `htrace-core-3.1.0-incubating.jar` available to all Region Servers by copying it into the directory `${HBASE_HOME}/lib/client-facing-thirdparty/`.
+
+
+---
+
+* [HBASE-22065](https://issues.apache.org/jira/browse/HBASE-22065) | *Major* | **Add listTableDescriptors(List\<TableName\>) method in AsyncAdmin**
+
+Add a listTableDescriptors(List\<TableName\>) method in the AsyncAdmin interface, to align with the Admin interface.
+
+
+---
+
+* [HBASE-22040](https://issues.apache.org/jira/browse/HBASE-22040) | *Major* | **Add mergeRegionsAsync with a List of region names method in AsyncAdmin**
+
+Add a mergeRegionsAsync(byte[][], boolean) method in the AsyncAdmin interface.
+
+Instead of using assert, now we will throw IllegalArgumentException when you want to merge less than 2 regions at client side. And also, at master side, instead of using assert, now we will throw DoNotRetryIOException if you want merge more than 2 regions, since we only support merging two regions at once for now.
+
+
+---
+
+* [HBASE-22039](https://issues.apache.org/jira/browse/HBASE-22039) | *Major* | **Should add the synchronous parameter for the XXXSwitch method in AsyncAdmin**
+
+Add drainXXX parameter for balancerSwitch/splitSwitch/mergeSwitch methods in the AsyncAdmin interface, which has the same meaning with the synchronous parameter for these methods in the Admin interface.
+
+
+---
+
+* [HBASE-21810](https://issues.apache.org/jira/browse/HBASE-21810) | *Major* | **bulkload  support set hfile compression on client**
+
+bulkload (HFileOutputFormat2)  support config the compression on client ,you can set the job configuration "hbase.mapreduce.hfileoutputformat.compression"  override the auto-detection of the target table's compression
+
+
+---
+
+* [HBASE-22000](https://issues.apache.org/jira/browse/HBASE-22000) | *Major* | **Deprecated isTableAvailable with splitKeys**
+
+Deprecated AsyncTable.isTableAvailable(TableName, byte[][]).
+
+
+---
+
+* [HBASE-21871](https://issues.apache.org/jira/browse/HBASE-21871) | *Major* | **Support to specify a peer table name in VerifyReplication tool**
+
+After HBASE-21871, we can specify a peer table name with --peerTableName in VerifyReplication tool like the following:
+hbase org.apache.hadoop.hbase.mapreduce.replication.VerifyReplication --peerTableName=peerTable 5 TestTable
+
+In addition, we can compare any 2 tables in any remote clusters with specifying both peerId and --peerTableName.
+
+For example:
+hbase org.apache.hadoop.hbase.mapreduce.replication.VerifyReplication --peerTableName=peerTable zk1,zk2,zk3:2181/hbase TestTable
+
+
+---
+
+* [HBASE-15728](https://issues.apache.org/jira/browse/HBASE-15728) | *Major* | **Add remaining per-table region / store / flush / compaction related metrics**
+
+Adds below flush, split, and compaction metrics
+
+ +  // split related metrics
+ +  private MutableFastCounter splitRequest;
+ +  private MutableFastCounter splitSuccess;
+ +  private MetricHistogram splitTimeHisto;
+ +
+ +  // flush related metrics
+ +  private MetricHistogram flushTimeHisto;
+ +  private MetricHistogram flushMemstoreSizeHisto;
+ +  private MetricHistogram flushOutputSizeHisto;
+ +  private MutableFastCounter flushedMemstoreBytes;
+ +  private MutableFastCounter flushedOutputBytes;
+ +
+ +  // compaction related metrics
+ +  private MetricHistogram compactionTimeHisto;
+ +  private MetricHistogram compactionInputFileCountHisto;
+ +  private MetricHistogram compactionInputSizeHisto;
+ +  private MetricHistogram compactionOutputFileCountHisto;
+ +  private MetricHistogram compactionOutputSizeHisto;
+ +  private MutableFastCounter compactedInputBytes;
+ +  private MutableFastCounter compactedOutputBytes;
+ +
+ +  private MetricHistogram majorCompactionTimeHisto;
+ +  private MetricHistogram majorCompactionInputFileCountHisto;
+ +  private MetricHistogram majorCompactionInputSizeHisto;
+ +  private MetricHistogram majorCompactionOutputFileCountHisto;
+ +  private MetricHistogram majorCompactionOutputSizeHisto;
+ +  private MutableFastCounter majorCompactedInputBytes;
+ +  private MutableFastCounter majorCompactedOutputBytes;
+
+
+---
+
+* [HBASE-20886](https://issues.apache.org/jira/browse/HBASE-20886) | *Critical* | **[Auth] Support keytab login in hbase client**
+
+From 2.2.0, hbase supports client login via keytab. To use this feature, client should specify \`hbase.client.keytab.file\` and \`hbase.client.keytab.principal\` in hbase-site.xml, then the connection will contain the needed credentials which be renewed periodically to communicate with kerberized hbase cluster.
+
+
+---
+
+* [HBASE-21410](https://issues.apache.org/jira/browse/HBASE-21410) | *Major* | **A helper page that help find all problematic regions and procedures**
+
+After HBASE-21410, we add a helper page to Master UI. This helper page is mainly to help HBase operator quickly found all regions and pids that are get stuck.
+There are 2 entries to get in this page.
+One is showing in the Regions in Transition section, it made "num region(s) in transition" a link that you can click and check all regions in transition and their related procedure IDs.
+The other one is showing in the table details section, it made the number of CLOSING or OPENING regions a link, which you can click and check regions and related procedure IDs of CLOSING or OPENING regions of a certain table.
+In this helper page, not only you can see all regions and related procedures, there are 2 buttons at the top which will show these regions or procedure IDs in text format. This is mainly aim to help operator to easily copy and paste all problematic procedure IDs and encoded region names to HBCK2's command line, by which we HBase operator can bypass these procedures or assign these regions.
+
+
+---
+
+* [HBASE-21588](https://issues.apache.org/jira/browse/HBASE-21588) | *Major* | **Procedure v2 wal splitting implementation**
+
+After HBASE-21588, we introduce a new way to do WAL splitting coordination by procedure framework. This can simplify the process of WAL splitting and no need to connect zookeeper any more.
+During ServerCrashProcedure, it will create a SplitWALProcedure for each WAL that need to split. Then each SplitWALProcedure will spawn a SplitWALRemoteProcedure to send the request to regionserver.
+At the RegionServer side, whole process is handled by SplitWALCallable. It split the WAL and return the result to master.
+According to my test, this patch has a better performance as the number of WALs that need to split increase. And it can relieve the pressure on zookeeper.
+
+
+---
+
+* [HBASE-20734](https://issues.apache.org/jira/browse/HBASE-20734) | *Major* | **Colocate recovered edits directory with hbase.wal.dir**
+
+Previously the recovered.edits directory was under the root directory. This JIRA moves the recovered.edits directory to be under the hbase.wal.dir if set. It also adds a check for any recovered.edits found under the root directory for backwards compatibility. This gives improvements when a faster media(like SSD) or more local FileSystem is used for the hbase.wal.dir than the root dir.
+
+
+---
+
+* [HBASE-20401](https://issues.apache.org/jira/browse/HBASE-20401) | *Minor* | **Make \`MAX\_WAIT\` and \`waitIfNotFinished\` in CleanerContext configurable**
+
+When oldwals (and hfile) cleaner cleans stale wals (and hfiles), it will periodically check and wait the clean results from filesystem, the total wait time will be no more than a max time.
+
+The periodically wait and check configurations are hbase.oldwals.cleaner.thread.check.interval.msec (default is 500 ms) and hbase.regionserver.hfilecleaner.thread.check.interval.msec (default is 1000 ms). 
+
+Meanwhile, The max time configurations are hbase.oldwals.cleaner.thread.timeout.msec and hbase.regionserver.hfilecleaner.thread.timeout.msec, they are set to 60 seconds by default.
+
+All support dynamic configuration.
+
+e.g. in the oldwals cleaning scenario, one may consider tuning hbase.oldwals.cleaner.thread.timeout.msec and hbase.oldwals.cleaner.thread.check.interval.msec 
+
+1. While deleting a oldwal never complete (strange but possible), then delete file task needs to wait for a max of 60 seconds. Here, 60 seconds might be too long, or the opposite way is to increase more than 60 seconds in the use cases of slow file delete. 
+2. The check and wait of a file delete is set to default in the period of 500 milliseconds, one might want to tune this checking period to a short interval to check more frequently or to a longer interval to avoid checking too often to manage their delete file task checking period (the longer interval may be use to avoid checking too fast while using a high latency storage).
+
+
+---
+
+* [HBASE-21481](https://issues.apache.org/jira/browse/HBASE-21481) | *Major* | **[acl] Superuser's permissions should not be granted or revoked by any non-su global admin**
+
+HBASE-21481 improves the quality of access control, by strengthening the protection of super users's privileges.
+
+
+---
+
+* [HBASE-21082](https://issues.apache.org/jira/browse/HBASE-21082) | *Critical* | **Reimplement assign/unassign related procedure metrics**
+
+Now we have four types of RIT procedure metrics, assign, unassign, move, reopen. The meaning of assign/unassign is changed, as we will not increase the unassign metric and then the assign metric when moving a region.
+Also introduced two new procedure metrics, open and close, which are used to track the open/close region calls to region server. We may send open/close multiple times to finish a RIT since we may retry multiple times.
+
+
+---
+
+* [HBASE-20724](https://issues.apache.org/jira/browse/HBASE-20724) | *Critical* | **Sometimes some compacted storefiles are still opened after region failover**
+
+Problem: This is an old problem since HBASE-2231. The compaction event marker was only writed to WAL. But after flush, the WAL may be archived, which means an useful compaction event marker be deleted, too. So the compacted store files cannot be archived when region open and replay WAL.
+
+Solution: After this jira, the compaction event tracker will be writed to HFile. When region open and load store files, read the compaction evnet tracker from HFile and archive the compacted store files which still exist.
+
+
+---
+
+* [HBASE-21820](https://issues.apache.org/jira/browse/HBASE-21820) | *Major* | **Implement CLUSTER quota scope**
+
+HBase contains two quota scopes: MACHINE and CLUSTER. Before this patch, set quota operations did not expose scope option to client api and use MACHINE as default, CLUSTER scope can not be set and used. 
+Shell commands are as follows:
+set\_quota, TYPE =\> THROTTLE, TABLE =\> 't1', LIMIT =\> '10req/sec'
+
+This issue implements CLUSTER scope in a simple way: For user, namespace, user over namespace quota, use [ClusterLimit / RSNum] as machine limit. For table and user over table quota, use [ClusterLimit / TotalTableRegionNum \* MachineTableRegionNum] as machine limit.
+After this patch, user can set CLUSTER scope quota, but MACHINE is still default if user ignore scope. 
+Shell commands are as follows:
+set\_quota, TYPE =\> THROTTLE, TABLE =\> 't1', LIMIT =\> '10req/sec'
+set\_quota, TYPE =\> THROTTLE, TABLE =\> 't1', LIMIT =\> '10req/sec', SCOPE =\> MACHINE
+set\_quota, TYPE =\> THROTTLE, TABLE =\> 't1', LIMIT =\> '10req/sec', SCOPE =\> CLUSTER
+
+
+---
+
+* [HBASE-21057](https://issues.apache.org/jira/browse/HBASE-21057) | *Minor* | **upgrade to latest spotbugs**
+
+Change spotbugs version to 3.1.11.
+
+
+---
+
+* [HBASE-21922](https://issues.apache.org/jira/browse/HBASE-21922) | *Major* | **BloomContext#sanityCheck may failed when use ROWPREFIX\_DELIMITED bloom filter**
+
+Remove bloom filter type ROWPREFIX\_DELIMITED. May add it back when find a better solution.
+
+
+---
+
+* [HBASE-21783](https://issues.apache.org/jira/browse/HBASE-21783) | *Major* | **Support exceed user/table/ns throttle quota if region server has available quota**
+
+Support enable or disable exceed throttle quota. Exceed throttle quota means, user can over consume user/namespace/table quota if region server has additional available quota because other users don't consume at the same time. 
+Use the following shell commands to enable/disable exceed throttle quota: enable\_exceed\_throttle\_quota
+disable\_exceed\_throttle\_quota
+There are two limits when enable exceed throttle quota: 
+1. Must set at least one read and one write region server throttle quota; 
+2. All region server throttle quotas must be in seconds time unit. Because once previous requests exceed their quota and consume region server quota, quota in other time units may be refilled in a long time, this may affect later requests.
+
+
+---
+
+* [HBASE-20587](https://issues.apache.org/jira/browse/HBASE-20587) | *Major* | **Replace Jackson with shaded thirdparty gson**
+
+Remove jackson dependencies from most hbase modules except hbase-rest, use shaded gson instead. The output json will be a bit different since jackson can use getter/setter, but gson will always use the fields.
+
+
+---
+
+* [HBASE-21928](https://issues.apache.org/jira/browse/HBASE-21928) | *Major* | **Deprecated HConstants.META\_QOS**
+
+Mark HConstants.META\_QOS as deprecated. It is for internal use only, which is the highest priority. You should not try to set a priority greater than or equal to this value, although it is no harm but also useless.
+
+
+---
+
+* [HBASE-17942](https://issues.apache.org/jira/browse/HBASE-17942) | *Major* | **Disable region splits and merges per table**
+
+This patch adds the ability to disable split and/or merge for a table (By default, split and merge are enabled for a table).
+
+
+---
+
+* [HBASE-21636](https://issues.apache.org/jira/browse/HBASE-21636) | *Major* | **Enhance the shell scan command to support missing scanner specifications like ReadType, IsolationLevel etc.**
+
+Allows shell to set Scan options previously not exposed. See additions as part of the scan help by typing following hbase shell:
+
+hbase\> help 'scan'
+
+
+---
+
+* [HBASE-21201](https://issues.apache.org/jira/browse/HBASE-21201) | *Major* | **Support to run VerifyReplication MR tool without peerid**
+
+We can specify peerQuorumAddress instead of peerId in VerifyReplication tool. So it no longer requires peerId to be setup when using this tool.
+
+For example:
+hbase org.apache.hadoop.hbase.mapreduce.replication.VerifyReplication zk1,zk2,zk3:2181/hbase testTable
+
+
+---
+
+* [HBASE-21838](https://issues.apache.org/jira/browse/HBASE-21838) | *Major* | **Create a special ReplicationEndpoint just for verifying the WAL entries are fine**
+
+Introduce a VerifyWALEntriesReplicationEndpoint which replicates nothing but only verifies if all the cells are valid.
+It can be used to capture bugs for writing WAL, as most times we will not read the WALs again after writing it if there are no region server crashes.
+
+
+---
+
+* [HBASE-21727](https://issues.apache.org/jira/browse/HBASE-21727) | *Minor* | **Simplify documentation around client timeout**
+
+Deprecated HBaseConfiguration#getInt(Configuration, String, String, int) method and removed it from 3.0.0 version.
+
+
+---
+
+* [HBASE-21764](https://issues.apache.org/jira/browse/HBASE-21764) | *Major* | **Size of in-memory compaction thread pool should be configurable**
+
+Introduced an new config key in this issue: hbase.regionserver.inmemory.compaction.pool.size. the default value would be 10.  you can configure this to set the pool size of in-memory compaction pool. Note that all memstores in one region server will share the same pool, so if you have many regions in one region server,  you need to set this larger to compact faster for better read performance.
+
+
+---
+
+* [HBASE-21684](https://issues.apache.org/jira/browse/HBASE-21684) | *Major* | **Throw DNRIOE when connection or rpc client is closed**
+
+Make StoppedRpcClientException extend DoNotRetryIOException.
+
+
+---
+
+* [HBASE-21739](https://issues.apache.org/jira/browse/HBASE-21739) | *Major* | **Move grant/revoke from regionserver to master**
+
+To implement user permission control in Precedure V2, move grant and revoke method from AccessController to master firstly.
+Mark AccessController#grant and AccessController#revoke as deprecated and please use Admin#grant and Admin#revoke instead.
+
+
+---
+
+* [HBASE-21791](https://issues.apache.org/jira/browse/HBASE-21791) | *Blocker* | **Upgrade thrift dependency to 0.12.0**
+
+IMPORTANT: Due to security issues, all users who use hbase thrift should avoid using releases which do not have this fix.
+
+The effect releases are:
+2.1.x: 2.1.2 and below
+2.0.x: 2.0.4 and below
+1.x: 1.4.x and below
+
+If you are using the effect releases above, please consider upgrading to a newer release ASAP.
+
+
+---
+
+* [HBASE-21792](https://issues.apache.org/jira/browse/HBASE-21792) | *Major* | **Mark HTableMultiplexer as deprecated and remove it in 3.0.0**
+
+HTableMultiplexer exposes the implementation class, and it is incomplete, so we mark it as deprecated and remove it in 3.0.0 release.
+
+There is no direct replacement for HTableMultiplexer, please use BufferedMutator if you want to batch mutations to a table.
+
+
+---
+
+* [HBASE-21782](https://issues.apache.org/jira/browse/HBASE-21782) | *Major* | **LoadIncrementalHFiles should not be IA.Public**
+
+Introduce a BulkLoadHFiles interface which is marked as IA.Public, for doing bulk load programmatically.
+Introduce a BulkLoadHFilesTool which extends BulkLoadHFiles, and is marked as IA.LimitedPrivate(TOOLS), for using from command line.
+The old LoadIncrementalHFiles is deprecated and will be removed in 3.0.0.
+
+
+---
+
+* [HBASE-21762](https://issues.apache.org/jira/browse/HBASE-21762) | *Major* | **Move some methods in ClusterConnection to Connection**
+
+Move the two getHbck method from ClusterConnection to Connection, and mark the methods as IA.LimitedPrivate(HBCK), as ClusterConnection is IA.Private and should not be depended by HBCK2.
+
+Add a clearRegionLocationCache method in Connection to clear the region location cache for all the tables. As in RegionLocator, most of the methods have a 'reload' parameter, which implicitly tells user that we have a region location cache, so adding a method to clear the cache is fine.
+
+
+---
+
+* [HBASE-21713](https://issues.apache.org/jira/browse/HBASE-21713) | *Major* | **Support set region server throttle quota**
+
+Support set region server rpc throttle quota which represents the read/write ability of region servers and throttles when region server's total requests exceeding the limit. 
+
+Use the following shell command to set RS quota:
+set\_quota TYPE =\> THROTTLE, REGIONSERVER =\> 'all', THROTTLE\_TYPE =\> WRITE, LIMIT =\> '20000req/sec'
+set\_quota TYPE =\> THROTTLE, REGIONSERVER =\> 'all', LIMIT =\> NONE
+"all" represents the throttle quota of all region servers and setting specified region server quota isn't supported currently.
+
+
+---
+
+* [HBASE-21689](https://issues.apache.org/jira/browse/HBASE-21689) | *Minor* | **Make table/namespace specific current quota info available in shell(describe\_namespace & describe)**
+
+In shell commands "describe\_namespace" and "describe", which are used to see the descriptors of the namespaces and tables respectively, quotas set on that particular namespace/table will also be printed along.
+
+
+---
+
+* [HBASE-17370](https://issues.apache.org/jira/browse/HBASE-17370) | *Major* | **Fix or provide shell scripts to drain and decommission region server**
+
+Adds shell support for the following:
+- List decommissioned/draining region servers
+- Decommission a list of region servers, optionally offload corresponding regions
+- Recommission a region server, optionally load a list of passed regions
+
+
+---
+
+* [HBASE-21734](https://issues.apache.org/jira/browse/HBASE-21734) | *Major* | **Some optimization in FilterListWithOR**
+
+After HBASE-21620, the filterListWithOR has been a bit slow because we need to merge each sub-filter's RC , while before HBASE-21620, we will skip many RC merging, but the logic was wrong. So here we choose another way to optimaze the performance: removing the KeyValueUtil#toNewKeyCell. 
+Anoop Sam John suggested that the KeyValueUtil#toNewKeyCell can save some GC before because if we copy key part of cell into a single byte[], then the block the cell refering won't be refered by the filter list any more, the upper layer can GC the data block quickly. while after HBASE-21620, we will update the prevCellList for every encountered cell now, so the lifecycle of cell in prevCellList for FilterList will be quite shorter. so just use the cell ref for saving cpu.
+BTW, we removed all the arrays streams usage in filter list, because it's also quite time-consuming in our test.
+
+
+---
+
+* [HBASE-21738](https://issues.apache.org/jira/browse/HBASE-21738) | *Critical* | **Remove all the CSLM#size operation in our memstore because it's an quite time consuming.**
+
+We found the memstore snapshotting would cost much time because of calling the time-consuming ConcurrentSkipListMap#Size, it would make the p999 latency spike happen. So in this issue, we remove all ConcurrentSkipListMap#size in memstore by counting the cellsCount in MemstoreSizeing. As the issue described, the p999 latency spike was mitigated.
+
+
+---
+
+* [HBASE-21034](https://issues.apache.org/jira/browse/HBASE-21034) | *Major* | **Add new throttle type: read/write capacity unit**
+
+Provides a new throttle type: capacity unit. One read/write/request capacity unit represents that read/write/read+write up to 1K data. If data size is more than 1K, then consume additional capacity units.
+
+Use shell command to set capacity unit(CU):
+set\_quota TYPE =\> THROTTLE, THROTTLE\_TYPE =\> WRITE, USER =\> 'u1', LIMIT =\> '10CU/sec'
+
+Use the "hbase.quota.read.capacity.unit" property to set the data size of one read capacity unit in bytes, the default value is 1K. Use the "hbase.quota.write.capacity.unit" property to set the data size of one write capacity unit in bytes, the default value is 1K.
+
+
+---
+
+* [HBASE-21595](https://issues.apache.org/jira/browse/HBASE-21595) | *Minor* | **Print thread's information and stack traces when RS is aborting forcibly**
+
+Does thread dump on stdout on abort.
+
+
+---
+
+* [HBASE-21732](https://issues.apache.org/jira/browse/HBASE-21732) | *Critical* | **Should call toUpperCase before using Enum.valueOf in some methods for ColumnFamilyDescriptor**
+
+Now all the Enum configs in ColumnFamilyDescriptor can accept lower case config value.
+
+
+---
+
+* [HBASE-21712](https://issues.apache.org/jira/browse/HBASE-21712) | *Minor* | **Make submit-patch.py python3 compatible**
+
+Python3 support was added to dev-support/submit-patch.py. To install newly required dependencies run \`pip install -r dev-support/python-requirements.txt\` command.
+
+
+---
+
+* [HBASE-21657](https://issues.apache.org/jira/browse/HBASE-21657) | *Major* | **PrivateCellUtil#estimatedSerializedSizeOf has been the bottleneck in 100% scan case.**
+
+In HBASE-21657,  I simplified the path of estimatedSerialiedSize() & estimatedSerialiedSizeOfCell() by moving the general getSerializedSize()
+and heapSize() from ExtendedCell to Cell interface. The patch also included some other improvments:
+
+1. For 99%  of case, our cells has no tags, so let the HFileScannerImpl just return the NoTagsByteBufferKeyValue if no tags, which means we can save 
+   lots of cpu time when sending no tags cell to rpc because can just return the length instead of getting the serialize size by caculating offset/length 
+   of each fields(row/cf/cq..)
+2. Move the subclass's getSerializedSize implementation from ExtendedCell to their own class, which mean we did not need to call ExtendedCell's
+   getSerialiedSize() firstly, then forward to subclass's getSerializedSize(withTags).
+3. Give a estimated result arraylist size for avoiding the frequent list extension when in a big scan, now we estimate the array size as min(scan.rows, 512).
+   it's also help a lot.
+
+We gain almost ~40% throughput improvement in 100% scan case for branch-2 (cacheHitRatio~100%)[1], it's a good thing. While it's a incompatible change in 
+some case, such as if the upstream user implemented their own Cells, although it's rare but can happen, then their compile will be error.
+
+
+---
+
+* [HBASE-21647](https://issues.apache.org/jira/browse/HBASE-21647) | *Major* | **Add status track for splitting WAL tasks**
+
+Adds task monitor that shows ServerCrashProcedure progress in UI.
+
+
+---
+
+* [HBASE-21652](https://issues.apache.org/jira/browse/HBASE-21652) | *Major* | **Refactor ThriftServer making thrift2 server inherited from thrift1 server**
+
+Before this issue, thrift1 server and thrift2 server are totally different servers. If a new feature is added to thrift1 server, thrfit2 server have to make the same change to support it(e.g. authorization). After this issue, thrift2 server is inherited from thrift1, thrift2 server now have all the features thrift1 server has(e.g http support, which thrift2 server doesn't have before).  The way to start thrift1 or thrift2 server remain the same after this issue.
+
+
+---
+
+* [HBASE-21661](https://issues.apache.org/jira/browse/HBASE-21661) | *Major* | **Provide Thrift2 implementation of Table/Admin**
+
+ThriftAdmin/ThriftTable are implemented based on Thrift2. With ThriftAdmin/ThriftTable, People can use thrift2 protocol just like HTable/HBaseAdmin. 
+Example of using ThriftConnection
+Configuration conf = HBaseConfiguration.create();
+conf.set(ClusterConnection.HBASE\_CLIENT\_CONNECTION\_IMPL,ThriftConnection.class.getName());
+Connection conn = ConnectionFactory.createConnection(conf);
+Table table = conn.getTable(tablename)
+It is just like a normal Connection, similar use experience with the default ConnectionImplementation
+
+
+---
+
+* [HBASE-21618](https://issues.apache.org/jira/browse/HBASE-21618) | *Critical* | **Scan with the same startRow(inclusive=true) and stopRow(inclusive=false) returns one result**
+
+There was a bug when scan with the same startRow(inclusive=true) and stopRow(inclusive=false). The old incorrect behavior is return one result. After this fix, the new correct behavior is return nothing.
+
+
+---
+
+* [HBASE-21159](https://issues.apache.org/jira/browse/HBASE-21159) | *Major* | **Add shell command to switch throttle on or off**
+
+Support enable or disable rpc throttle when hbase quota is enabled. If hbase quota is enabled, rpc throttle is enabled by default.  When disable rpc throttle, HBase will not throttle any request. Use the following commands to switch rpc throttle : enable\_rpc\_throttle / disable\_rpc\_throttle.
+
+
+---
+
+* [HBASE-21659](https://issues.apache.org/jira/browse/HBASE-21659) | *Minor* | **Avoid to load duplicate coprocessors in system config and table descriptor**
+
+Add a new configuration "hbase.skip.load.duplicate.table.coprocessor". The default value is false to keep compatible with the old behavior. Config it true to skip load duplicate table coprocessor.
+
+
+---
+
+* [HBASE-21650](https://issues.apache.org/jira/browse/HBASE-21650) | *Major* | **Add DDL operation and some other miscellaneous to thrift2**
+
+Added DDL operations and some other structure definition to thrift2. Methods added: 
+create/modify/addColumnFamily/deleteColumnFamily/modifyColumnFamily/enable/disable/truncate/delete table
+create/modify/delete namespace
+get(list)TableDescriptor(s)/get(list)NamespaceDescirptor(s)
+tableExists/isTableEnabled/isTableDisabled/isTableAvailabe
+And some class definitions along with those methods
+
+
+---
+
+* [HBASE-21643](https://issues.apache.org/jira/browse/HBASE-21643) | *Major* | **Introduce two new region coprocessor method and deprecated postMutationBeforeWAL**
+
+Deprecated region coprocessor postMutationBeforeWAL and introduce two new region coprocessor postIncrementBeforeWAL and postAppendBeforeWAL instead.
 
 
 ---
@@ -52,6 +810,69 @@ Add a SERIAL flag for add\_peer command to identifiy whether or not the replicat
 
 ---
 
+* [HBASE-21453](https://issues.apache.org/jira/browse/HBASE-21453) | *Major* | **Convert ReadOnlyZKClient to DEBUG instead of INFO**
+
+Log level of ReadOnlyZKClient moved to debug.
+
+
+---
+
+* [HBASE-21283](https://issues.apache.org/jira/browse/HBASE-21283) | *Minor* | **Add new shell command 'rit' for listing regions in transition**
+
+<!-- markdown -->
+
+The HBase `shell` now includes a command to list regions currently in transition.
+
+```
+HBase Shell
+Use "help" to get list of supported commands.
+Use "exit" to quit this interactive shell.
+Version 1.5.0-SNAPSHOT, r9bb6d2fa8b760f16cd046657240ebd4ad91cb6de, Mon Oct  8 21:05:50 UTC 2018
+
+hbase(main):001:0> help 'rit'
+List all regions in transition.
+Examples:
+  hbase> rit
+
+hbase(main):002:0> create ...
+0 row(s) in 2.5150 seconds
+=> Hbase::Table - IntegrationTestBigLinkedList
+
+hbase(main):003:0> rit
+0 row(s) in 0.0340 seconds
+
+hbase(main):004:0> unassign '56f0c38c81ae453d19906ce156a2d6a1'
+0 row(s) in 0.0540 seconds
+
+hbase(main):005:0> rit 
+IntegrationTestBigLinkedList,L\xCC\xCC\xCC\xCC\xCC\xCC\xCB,1539117183224.56f0c38c81ae453d19906ce156a2d6a1. state=PENDING_CLOSE, ts=Tue Oct 09 20:33:34 UTC 2018 (0s ago), server=null                                                                                                                                                                                   
+1 row(s) in 0.0170 seconds
+```
+
+
+---
+
+* [HBASE-21567](https://issues.apache.org/jira/browse/HBASE-21567) | *Major* | **Allow overriding configs starting up the shell**
+
+Allow passing of -Dkey=value option to shell to override hbase-\* configuration: e.g.:
+
+$ ./bin/hbase shell -Dhbase.zookeeper.quorum=ZK0.remote.cluster.example.org,ZK1.remote.cluster.example.org,ZK2.remote.cluster.example.org -Draining=false
+...
+hbase(main):001:0\> @shell.hbase.configuration.get("hbase.zookeeper.quorum")
+=\> "ZK0.remote.cluster.example.org,ZK1.remote.cluster.example.org,ZK2.remote.cluster.example.org"
+hbase(main):002:0\> @shell.hbase.configuration.get("raining")
+=\> "false"
+
+
+---
+
+* [HBASE-21560](https://issues.apache.org/jira/browse/HBASE-21560) | *Major* | **Return a new TableDescriptor for MasterObserver#preModifyTable to allow coprocessor modify the TableDescriptor**
+
+Incompatible change. Allow MasterObserver#preModifyTable to return a new TableDescriptor. And master will use this returned TableDescriptor to modify table.
+
+
+---
+
 * [HBASE-21551](https://issues.apache.org/jira/browse/HBASE-21551) | *Blocker* | **Memory leak when use scan with STREAM at server side**
 
 <!-- markdown -->
@@ -75,6 +896,20 @@ Compactions always use this sequential optimized reading mechanism so downstream
 
 ---
 
+* [HBASE-21550](https://issues.apache.org/jira/browse/HBASE-21550) | *Major* | **Add a new method preCreateTableRegionInfos for MasterObserver which allows CPs to modify the TableDescriptor**
+
+Add a new method preCreateTableRegionInfos for MasterObserver, which will be called before creating region infos for the given table,  before the preCreateTable method. It allows you to return a new TableDescritor to override the original one. Returns null or throws exception will stop the creation.
+
+
+---
+
+* [HBASE-21492](https://issues.apache.org/jira/browse/HBASE-21492) | *Critical* | **CellCodec Written To WAL Before It's Verified**
+
+After HBASE-21492 the return type of WALCellCodec#getWALCellCodecClass has been changed from String to Class
+
+
+---
+
 * [HBASE-21387](https://issues.apache.org/jira/browse/HBASE-21387) | *Major* | **Race condition surrounding in progress snapshot handling in snapshot cache leads to loss of snapshot files**
 
 To prevent race condition between in progress snapshot (performed by TakeSnapshotHandler) and HFileCleaner which results in data loss, this JIRA introduced mutual exclusion between taking snapshot and running HFileCleaner. That is, at any given moment, either some snapshot can be taken or, HFileCleaner checks hfiles which are not referenced, but not both can be running.
@@ -82,9 +917,25 @@ To prevent race condition between in progress snapshot (performed by TakeSnapsho
 
 ---
 
-* [HBASE-21423](https://issues.apache.org/jira/browse/HBASE-21423) | *Major* | **Procedures for meta table/region should be able to execute in separate workers**
+* [HBASE-21452](https://issues.apache.org/jira/browse/HBASE-21452) | *Major* | **Illegal character in hbase counters group name**
 
-The procedure for meta table will be executed in a separate worker thread named 'Urgent Worker' to avoid stuck. A new config named 'hbase.master.urgent.procedure.threads' is added, the default value for it is 1. To disable the separate worker, set it to 0.
+Changes group name of hbase metrics from "HBase Counters" to "HBaseCounters".
+
+
+---
+
+* [HBASE-21443](https://issues.apache.org/jira/browse/HBASE-21443) | *Major* | **[hbase-connectors] Purge hbase-\* modules from core now they've been moved to hbase-connectors**
+
+Parent issue moved hbase-spark\* modules to hbase-connectors. This issue removes hbase-spark\* modules from hbase core repo.
+
+
+---
+
+* [HBASE-21430](https://issues.apache.org/jira/browse/HBASE-21430) | *Major* | **[hbase-connectors] Move hbase-spark\* modules to hbase-connectors repo**
+
+hbase-spark\* modules have been cloned to https://github.com/apache/hbase-connectors All spark connector dev is to happen in that repo from here on out.
+
+Let me file a subtask to remove hbase-spark\* modules from hbase core.
 
 
 ---
@@ -96,22 +947,23 @@ Add -Djdk.net.URLClassPath.disableClassPathURLCheck=true when executing surefire
 
 ---
 
-* [HBASE-21237](https://issues.apache.org/jira/browse/HBASE-21237) | *Blocker* | **Use CompatRemoteProcedureResolver to dispatch open/close region requests to RS**
+* [HBASE-21191](https://issues.apache.org/jira/browse/HBASE-21191) | *Major* | **Add a holding-pattern if no assign for meta or namespace (Can happen if masterprocwals have been cleared).**
 
-Use CompatRemoteProcedureResolver  instead of ExecuteProceduresRemoteCall to dispatch region open/close requests to RS. Since ExecuteProceduresRemoteCall  will group all the open/close operations in one call and execute them sequentially on the target RS. If one operation fails, all the operation will be marked as failure.
+Puts master startup into holding pattern if meta is not assigned (previous it would exit). To make progress again, operator needs to inject an assign (Caveats and instruction can be found in HBASE-21035).
 
 
 ---
 
-* [HBASE-21322](https://issues.apache.org/jira/browse/HBASE-21322) | *Major* | **Add a scheduleServerCrashProcedure() API to HbckService**
+* [HBASE-21322](https://issues.apache.org/jira/browse/HBASE-21322) | *Critical* | **Add a scheduleServerCrashProcedure() API to HbckService**
 
 Adds scheduleServerCrashProcedure to the HbckService.
 
 
+---
 
-# HBASE  2.1.1 Release Notes
+* [HBASE-21325](https://issues.apache.org/jira/browse/HBASE-21325) | *Major* | **Force to terminate regionserver when abort hang in somewhere**
 
-These release notes cover new developer and user-facing incompatibilities, important issues, features, and major improvements.
+Add two new config hbase.regionserver.abort.timeout and hbase.regionserver.abort.timeout.task. If regionserver abort timeout, it will schedule an abort timeout task to run. The default abort task is SystemExitWhenAbortTimeout, which will force to terminate region server when abort timeout. And you can config a special abort timeout task by hbase.regionserver.abort.timeout.task.
 
 
 ---
@@ -158,20 +1010,6 @@ Adds cleaner logging around balancer start.
 
 ---
 
-* [HBASE-21075](https://issues.apache.org/jira/browse/HBASE-21075) | *Blocker* | **Confirm that we can (rolling) upgrade from 2.0.x and 2.1.x to 2.2.x after HBASE-20881**
-
-hbase-2.2.x uses a new Procedure form assiging/unassigning/moving Regions; it does not process hbase-2.1.x and earlier Unassign/Assign Procedure types. Upgrade requires that we first drain the Master Procedure Store of old style Procedures before starting the new 2.2.x Master. The patch here facilitates the draining process.
-
-On your running hbase-2.1.1+ (or 2.0.3+ cluster), when upgrading:
-
-1. Shutdown both active and standby masters (Your cluster will continue to server reads and writes without interruption).
-2. Set the property hbase.procedure.upgrade-to-2-2 to true in hbase-site.xml for the Master, and start only one Master, still using the 2.1.1+ (or 2.0.3+) binaries.
-3. Wait until the Master quits. Confirm that there is a 'READY TO ROLLING UPGRADE' message in the master log as the cause of the shutdown. The Procedure Store is now empty.
-4. Start new Masters with the new 2.2.0+ code.
-
-
----
-
 * [HBASE-21335](https://issues.apache.org/jira/browse/HBASE-21335) | *Critical* | **Change the default wait time of HBCK2 tool**
 
 Changed waitTime parameter to lockWait on bypass. Changed default waitTime from 0 -- i.e. wait for ever -- to 1ms so if lock is held, we'll go past it and if override enforce bypass.
@@ -193,11 +1031,27 @@ Cleans up usage and docs around Canary.  Does not change command-line args (thou
 
 ---
 
+* [HBASE-21278](https://issues.apache.org/jira/browse/HBASE-21278) | *Critical* | **Do not rollback successful sub procedures when rolling back a procedure**
+
+For the sub procedures which are successfully finished, do not do rollback. This is a change in rollback behavior.
+
+State changes which are done by sub procedures should be handled by parent procedures when rolling back. For example, when rolling back a MergeTableProcedure, we will schedule new procedures to bring the offline regions online instead of rolling back the original procedures which off-lined the regions (in fact these procedures can not be rolled back...).
+
+
+---
+
 * [HBASE-21158](https://issues.apache.org/jira/browse/HBASE-21158) | *Critical* | **Empty qualifier cell should not be returned if it does not match QualifierFilter**
 
 <!-- markdown -->
 
 Scans that make use of `QualifierFilter` previously would erroneously return both columns with an empty qualifier along with those that matched. After this change that behavior has changed to only return those columns that match.
+
+
+---
+
+* [HBASE-21098](https://issues.apache.org/jira/browse/HBASE-21098) | *Major* | **Improve Snapshot Performance with Temporary Snapshot Directory when rootDir on S3**
+
+It is recommended to place the working directory on-cluster on HDFS as doing so has shown a strong performance increase due to data locality. It is important to note that the working directory should not overlap with any existing directories as the working directory will be cleaned out during the snapshot process. Beyond that, any well-named directory on HDFS should be sufficient.
 
 
 ---
@@ -227,17 +1081,6 @@ Adds anchors #tables, #tasks, etc.
 
 ---
 
-* [HBASE-21213](https://issues.apache.org/jira/browse/HBASE-21213) | *Major* | **[hbck2] bypass leaves behind state in RegionStates when assign/unassign**
-
-Adds override to assigns and unassigns. Changes bypass 'force' to align calling the param 'override' instead.
-
-The new override allows 'overriding' previous Procedure owner to override their ownership of the Procedured entity ("Region").
-
-Used by hbck2.
-
-
----
-
 * [HBASE-21232](https://issues.apache.org/jira/browse/HBASE-21232) | *Major* | **Show table state in Tables view on Master home page**
 
 Add table state column to the tables panel
@@ -252,58 +1095,15 @@ Removed the abort\_procedure command from shell -- dangerous -- and deprecated a
 
 ---
 
-* [HBASE-21210](https://issues.apache.org/jira/browse/HBASE-21210) | *Major* | **Add bypassProcedure() API to HBCK2**
+* [HBASE-20636](https://issues.apache.org/jira/browse/HBASE-20636) | *Major* | **Introduce two bloom filter type : ROWPREFIX\_FIXED\_LENGTH and ROWPREFIX\_DELIMITED**
 
-Added a bypass to hbck2:
-
-{code}
-$ HBASE\_CLASSPATH\_PREFIX=../hbase-operator-tools/hbase-hbck2/target/hbase-hbck2-1.0.0-SNAPSHOT.jar ./bin/hbase org.apache.hbase.HBCK2
-usage: HBCK2 [OPTIONS] COMMAND \<ARGS\>
-
-Options:
- -d,--debug                                 run with debug output
- -h,--help                                  output this help message
- -p,--hbase.zookeeper.property.clientPort   peerport of target hbase
-                                            ensemble
- -q,--hbase.zookeeper.quorum \<arg\>          ensemble of target hbase
- -z,--zookeeper.znode.parent                parent znode of target hbase
-
-Commands:
- setTableState \<TABLENAME\> \<STATE\>
-   Possible table states: ENABLED, DISABLED, DISABLING, ENABLING
-   To read current table state, in the hbase shell run:
-     hbase\> get 'hbase:meta', '\<TABLENAME\>', 'table:state'
-   A value of \\x08\\x00 == ENABLED, \\x08\\x01 == DISABLED, etc.
-   An example making table name 'user' ENABLED:
-     $ HBCK2 setTableState users ENABLED
-   Returns whatever the previous table state was.
-
- assigns \<ENCODED\_REGIONNAME\>...
-   A 'raw' assign that can be used even during Master initialization.
-   Skirts Coprocessors. Pass one or more encoded RegionNames:
-   e.g. 1588230740 is hard-coded encoding for hbase:meta region and
-   de00010733901a05f5a2a3a382e27dd4 is an example of what a random
-   user-space encoded Region name looks like. For example:
-     $ HBCK2 assign 1588230740 de00010733901a05f5a2a3a382e27dd4
-   Returns the pid of the created AssignProcedure or -1 if none.
-
- bypass [OPTIONS] \<PID\>...
-   Pass one (or more) procedure 'pid's to skip to the procedure finish.
-   Parent of this procedures will also skip to its finish. Entities will
-   be left in an inconsistent state and will require manual fixup.
-   Pass --force to break any outstanding locks.
-   Pass --waitTime=\<seconds\> to wait on entity lock before giving up.
-   Default: force=false and waitTime=0. Returns true if succeeded.
-
- unassigns \<ENCODED\_REGIONNAME\>...
-   A 'raw' unassign that can be used even during Master initialization.
-   Skirts Coprocessors. Pass one or more encoded RegionNames:
-   Skirts Coprocessors. Pass one or more encoded RegionNames:
-   de00010733901a05f5a2a3a382e27dd4 is an example of what a random
-   user-space encoded Region name looks like. For example:
-     $ HBCK2 unassign 1588230740 de00010733901a05f5a2a3a382e27dd4
-   Returns the pid of the created UnassignProcedure or -1 if none.
-{code}
+Add two bloom filter type : ROWPREFIX\_FIXED\_LENGTH and ROWPREFIX\_DELIMITED
+1. ROWPREFIX\_FIXED\_LENGTH: specify the length of the prefix
+2. ROWPREFIX\_DELIMITED: specify the delimiter of the prefix
+Need to specify parameters for these two types of bloomfilter, otherwise the table will fail to create
+Example:
+create 't1', {NAME =\> 'f1', BLOOMFILTER =\> 'ROWPREFIX\_FIXED\_LENGTH', CONFIGURATION =\> {'RowPrefixBloomFilter.prefix\_length' =\> '10'}}
+create 't1', {NAME =\> 'f1', BLOOMFILTER =\> 'ROWPREFIX\_DELIMITED', CONFIGURATION =\> {'RowPrefixDelimitedBloomFilter.delimiter' =\> '#'}}
 
 
 ---
@@ -357,16 +1157,9 @@ Commands:
 
 ---
 
-* [HBASE-21191](https://issues.apache.org/jira/browse/HBASE-21191) | *Major* | **Add a holding-pattern if no assign for meta or namespace (Can happen if masterprocwals have been cleared).**
+* [HBASE-21021](https://issues.apache.org/jira/browse/HBASE-21021) | *Major* | **Result returned by Append operation should be ordered**
 
-Puts master startup into holding pattern if meta is not assigned (previous it would exit). To make progress again, operator needs to inject an assign (Caveats and instruction can be found in HBASE-21035).
-
-
----
-
-* [HBASE-21125](https://issues.apache.org/jira/browse/HBASE-21125) | *Major* | **Backport 'HBASE-20942 Improve RpcServer TRACE logging' to branch-2.1**
-
-Allows configuration of the length of RPC messages printed to the log at TRACE level via "hbase.ipc.trace.param.size" in RpcServer.
+This change ensures Append operations are assembled into the expected order.
 
 
 ---
@@ -381,11 +1174,25 @@ Make it so can run the WAL parse and load system in isolation. Here is an exampl
 
 ---
 
+* [HBASE-21107](https://issues.apache.org/jira/browse/HBASE-21107) | *Minor* | **add a metrics for netty direct memory**
+
+Add a new nettyDirectMemoryUsage under server's ipc metrics to show direct memory usage for netty rpc server.
+
+
+---
+
 * [HBASE-21153](https://issues.apache.org/jira/browse/HBASE-21153) | *Major* | **Shaded client jars should always build in relevant phase to avoid confusion**
 
 Client facing artifacts are now built whenever Maven is run through the "package" goal. Previously, the client facing artifacts would create placeholder jars that skipped repackaging HBase and third-party dependencies unless the "release" profile was active.
 
 Build times may be noticeably longer depending on your build hardware. For example, the Jenkins worker nodes maintained by ASF Infra take ~14% longer to do a full packaging build. An example portability-focused personal laptop took ~25% longer.
+
+
+---
+
+* [HBASE-20942](https://issues.apache.org/jira/browse/HBASE-20942) | *Major* | **Improve RpcServer TRACE logging**
+
+Allows configuration of the length of RPC messages printed to the log at TRACE level via "hbase.ipc.trace.param.size" in RpcServer.
 
 
 ---
@@ -411,11 +1218,27 @@ Adds an HBCK Service and a first method to force-change-in-table-state for use b
 
 ---
 
+* [HBASE-21071](https://issues.apache.org/jira/browse/HBASE-21071) | *Major* | **HBaseTestingUtility::startMiniCluster() to use builder pattern**
+
+Cleanup all the cluster start override combos in HBaseTestingUtility by adding a StartMiniClusterOption and Builder.
+
+
+---
+
 * [HBASE-21072](https://issues.apache.org/jira/browse/HBASE-21072) | *Major* | **Block out HBCK1 in hbase2**
 
 Fence out hbase-1.x hbck1 instances. Stop them making state changes on an hbase-2.x cluster; they could do damage. We do this by writing the hbck1 lock file into place on hbase-2.x Master start-up.
 
 To disable this new behavior, set hbase.write.hbck1.lock.file to false
+
+
+---
+
+* [HBASE-20881](https://issues.apache.org/jira/browse/HBASE-20881) | *Major* | **Introduce a region transition procedure to handle all the state transition for a region**
+
+Introduced a new TransitRegionStateProcedure to replace the old AssignProcedure/UnassignProcedure/MoveRegionProcedure. In the old code, MRP will not be attached to RegionStateNode, so it can not be interrupted by ServerCrashProcedure, which introduces lots of tricky code to deal with races, and also causes lots of other difficulties on how to prevent scheduling redundant or even conflict procedures for a region.
+
+And now TRSP is the only one procedure which can bring region online or offline. When you want to schedule one, you need to check whether there is already one attached to the RegionStateNode, under the lock of the RegionStateNode. If not just go ahead, and if there is one, then you should do something, for example, give up and fail directly, or tell the TRSP to give up(This is what SCP does). Since the check and attach are both under the lock of RSN, it will greatly reduce the possible races, and make the code much simpler.
 
 
 ---
@@ -478,6 +1301,20 @@ Update hadoop-two.version to 2.7.7 and hadoop-three.version to 3.0.3 due to a JD
 
 ---
 
+* [HBASE-20672](https://issues.apache.org/jira/browse/HBASE-20672) | *Minor* | **New metrics ReadRequestRate and WriteRequestRate**
+
+Exposing 2 new metrics in HBase to provide ReadRequestRate and WriteRequestRate at region server level. These metrics give the rate of request handled by the region server and are reset after every monitoring interval.
+
+
+---
+
+* [HBASE-6028](https://issues.apache.org/jira/browse/HBASE-6028) | *Minor* | **Implement a cancel for in-progress compactions**
+
+Added a new command to the shell to switch on/off compactions called "compaction\_switch". Disabling compactions will interrupt any currently ongoing compactions. This setting will be lost on restart of the server. Added the configuration hbase.regionserver.compaction.enabled so user can enable/disable compactions via hbase-site.xml.
+
+
+---
+
 * [HBASE-20884](https://issues.apache.org/jira/browse/HBASE-20884) | *Major* | **Replace usage of our Base64 implementation with java.util.Base64**
 
 Class org.apache.hadoop.hbase.util.Base64 has been removed in it's entirety from HBase 2+. In HBase 1, unused methods have been removed from the class and the audience was changed from  Public to Private. This class was originally intended as an internal utility class that could be used externally but thinking since changed; these classes should not have been advertised as public to end-users.
@@ -485,331 +1322,22 @@ Class org.apache.hadoop.hbase.util.Base64 has been removed in it's entirety from
 This represents an incompatible change for users who relied on this implementation. An alternative implementation for affected clients is available at java.util.Base64 when using Java 8 or newer; be aware, it may encode/decode differently. For clients seeking to restore this specific implementation, it is available in the public domain for download at http://iharder.sourceforge.net/current/java/base64/
 
 
-
-# HBASE  2.1.0 Release Notes
-
-These release notes cover new developer and user-facing incompatibilities, important issues, features, and major improvements.
-
-
 ---
 
-* [HBASE-20691](https://issues.apache.org/jira/browse/HBASE-20691) | *Blocker* | **Storage policy should allow deferring to HDFS**
+* [HBASE-20357](https://issues.apache.org/jira/browse/HBASE-20357) | *Major* | **AccessControlClient API Enhancement**
+
+This enhances the AccessControlClient APIs to retrieve the permissions based on namespace, table name, family and qualifier for specific user. AccessControlClient can also validate a user whether allowed to perform specified operations on a particular table.
+Following APIs have been added,
+1) getUserPermissions(Connection connection, String tableRegex, byte[] columnFamily, byte[] columnQualifier, String userName) 
+	 Scope of retrieving permission will be same as existing.
+2) hasPermission(onnection connection, String tableName, byte[] columnFamily, byte[] columnQualifier, String userName, Permission.Action... actions)
+     Scope of validating user privilege,
+           User can perform self check without any special privilege but ADMIN privilege will be required to perform check for other users.
+           For example, suppose there are two users "userA" & "userB" then there can be below scenarios,
+            a. When userA want to check whether userA have privilege to perform mentioned actions
+                 userA don't need ADMIN privilege, as it's a self query.
+            b. When userA want to check whether userB have privilege to perform mentioned actions,
+                 userA must have ADMIN or superuser privilege, as it's trying to query for other user.
 
-After HBASE-20691 we have changed the default setting of hbase.wal.storage.policy from "HOT" back to "NONE" which means we defer the policy to HDFS. This fixes the problem of release 2.0.0 that the storage policy of WAL directory will defer to HDFS and may not be "HOT" even if you explicitly set hbase.wal.storage.policy to "HOT"
 
 
----
-
-* [HBASE-20839](https://issues.apache.org/jira/browse/HBASE-20839) | *Blocker* | **Fallback to FSHLog if we can not instantiated AsyncFSWAL when user does not specify AsyncFSWAL explicitly**
-
-As we hack into the internal of DFSClient when implementing AsyncFSWAL to get better performance, a patch release of hadoop can make it broken.
-
-So now, if user does not specify a wal provider, then we will first try to use 'asyncfs', i.e, the AsyncFSWALProvider. If we fail due to some compatible issues, we will fallback to 'filesystem', i.e, FSHLog.
-
-
----
-
-* [HBASE-20193](https://issues.apache.org/jira/browse/HBASE-20193) | *Critical* | **Basic Replication Web UI - Regionserver**
-
-After HBASE-20193, we add a section to web ui to show the replication status of each wal group. There are 2 parts of this section, they both show the peerId, wal group and current replicating log of each replication source. And one is showing the information of replication log queue, i.e. size of current log, log queue size and replicating offset. The other one is showing the delay of replication, i.e. last shipped age and replication delay.
-If the offset shows -1 and replication delay is UNKNOWN, that means replication is not started. This may be caused by this peer is disabled or the replicationEndpoint is sleeping due to some reason.
-
-
----
-
-* [HBASE-19997](https://issues.apache.org/jira/browse/HBASE-19997) | *Blocker* | **[rolling upgrade] 1.x =\> 2.x**
-
-Now we have a 'basically work' solution for rolling upgrade from 1.4.x to 2.x. Please see the "Rolling Upgrade from 1.x to 2.x" section in ref guide for more details.
-
-
----
-
-* [HBASE-20270](https://issues.apache.org/jira/browse/HBASE-20270) | *Major* | **Turn off command help that follows all errors in shell**
-
-<!-- markdown -->
-The command help that followed all errors, before, is now no longer available. Erroneous command inputs would now just show error-texts followed by the shell command to try for seeing the help message. It looks like: For usage try 'help “create”’. Operators can copy-paste the command to get the help message.
-
-
----
-
-* [HBASE-20194](https://issues.apache.org/jira/browse/HBASE-20194) | *Critical* | **Basic Replication WebUI - Master**
-
-After HBASE-20194, we added 2 parts to master's web page.
-One is Peers that shows all replication peers and some of their configurations, like peer id, cluster key, state, bandwidth, and which namespace or table it will replicate.
-The other one is replication status of all regionservers, we added a tab to region servers division, then we can check the replication delay of all region servers for any peer. This table shows AgeOfLastShippedOp, SizeOfLogQueue and ReplicationLag for each regionserver and the table is sort by ReplicationLag in descending order. By this way we can easily find the problematic region server. If the replication delay is UNKNOWN, that means this walGroup doesn't start replicate yet and it may get disabled. ReplicationLag will update once this peer start replicate.
-
-
----
-
-* [HBASE-18569](https://issues.apache.org/jira/browse/HBASE-18569) | *Major* | **Add prefetch support for async region locator**
-
-Add prefetch support for async region locator. The default value is 10. Set 'hbase.client.locate.prefetch.limit' in hbase-site.xml if you want to use another value for it.
-
-
----
-
-* [HBASE-20642](https://issues.apache.org/jira/browse/HBASE-20642) | *Major* | **IntegrationTestDDLMasterFailover throws 'InvalidFamilyOperationException**
-
-This changes client-side nonce generation to use the same nonce for re-submissions of client RPC DDL operations.
-
-
----
-
-* [HBASE-20708](https://issues.apache.org/jira/browse/HBASE-20708) | *Blocker* | **Remove the usage of RecoverMetaProcedure in master startup**
-
-Introduce an InitMetaProcedure to initialize meta table for a new HBase deploy. Marked RecoverMetaProcedure deprecated and remove the usage of it in the current code base. We still need to keep it in place for compatibility. The code in RecoverMetaProcedure has been moved to ServerCrashProcedure, and SCP will always be enabled and we will rely on it to bring meta region online.
-
-For more on the issue addressed by this commit, see the design doc for overview and plan: https://docs.google.com/document/d/1\_872oHzrhJq4ck7f6zmp1J--zMhsIFvXSZyX1Mxg5MA/edit#heading=h.xy1z4alsq7uy
-
-
----
-
-* [HBASE-20334](https://issues.apache.org/jira/browse/HBASE-20334) | *Major* | **add a test that expressly uses both our shaded client and the one from hadoop 3**
-
-<!-- markdown -->
-
-HBase now includes a helper script that can be used to run a basic functionality test for a given HBase installation at in `dev_support`. The test can optionally be given an HBase client artifact to rely on and can optionally be given specific Hadoop client artifacts to use.
-
-For usage information see `./dev-support/hbase_nightly_pseudo-distributed-test.sh --help`.
-
-The project nightly tests now make use of this test to check running on top of Hadoop 2, Hadoop 3, and Hadoop 3 with shaded client artifacts.
-
-
----
-
-* [HBASE-19735](https://issues.apache.org/jira/browse/HBASE-19735) | *Major* | **Create a minimal "client" tarball installation**
-
-<!-- markdown -->
-
-The HBase convenience binary artifacts now includes a client focused tarball that a) includes more docs and b) does not include scripts or jars only needed for running HBase cluster services.
-
-The new artifact is made as a normal part of the `assembly:single` maven command.
-
-
----
-
-* [HBASE-20615](https://issues.apache.org/jira/browse/HBASE-20615) | *Major* | **emphasize use of shaded client jars when they're present in an install**
-
-<!-- markdown -->
-
-HBase's built in scripts now rely on the downstream facing shaded artifacts where possible. In particular interest to downstream users, the `hbase classpath` and `hbase mapredcp` commands now return the relevant shaded client artifact and only those third paty jars needed to make use of them (e.g. slf4j-api, commons-logging, htrace, etc).
-
-Downstream users should note that by default the `hbase classpath` command will treat having `hadoop` on the shell's PATH as an implicit request to include the output of the `hadoop classpath` command in the returned classpath. This long-existing behavior can be opted out of by setting the environment variable `HBASE_DISABLE_HADOOP_CLASSPATH_LOOKUP` to the value "true". For example: `HBASE_DISABLE_HADOOP_CLASSPATH_LOOKUP="true" bin/hbase classpath`.
-
-
----
-
-* [HBASE-20333](https://issues.apache.org/jira/browse/HBASE-20333) | *Critical* | **break up shaded client into one with no Hadoop and one that's standalone**
-
-<!-- markdown -->
-
-Downstream users who need to use both HBase and Hadoop APIs should switch to relying on the new `hbase-shaded-client-byo-hadoop` artifact rather than the existing `hbase-shaded-client` artifact. The new artifact no longer includes and Hadoop classes.
-
-It should work in combination with either the output of `hadoop classpath` or the Hadoop provided client-facing shaded artifacts in Hadoop 3+.
-
-
----
-
-* [HBASE-20332](https://issues.apache.org/jira/browse/HBASE-20332) | *Critical* | **shaded mapreduce module shouldn't include hadoop**
-
-<!-- markdown -->
-
-The `hbase-shaded-mapreduce` artifact no longer include its own copy of Hadoop classes. Users who make use of the artifact via YARN should be able to get these classes from YARN's classpath without having to make any changes.
-
-
----
-
-* [HBASE-20681](https://issues.apache.org/jira/browse/HBASE-20681) | *Major* | **IntegrationTestDriver fails after HADOOP-15406 due to missing hamcrest-core**
-
-<!-- markdown -->
-
-Users of our integration tests on Hadoop 3 can now add all needed dependencies by pointing at jars included in our binary convenience artifact.
-
-Prior to this fix, downstream users on Hadoop 3 would need to get a copy of the Hamcrest v1.3 jar from elsewhere.
-
-
----
-
-* [HBASE-19852](https://issues.apache.org/jira/browse/HBASE-19852) | *Major* | **HBase Thrift 1 server SPNEGO Improvements**
-
-Adds two new properties for hbase-site.xml for THRIFT SPNEGO when in HTTP mode:
-\* hbase.thrift.spnego.keytab.file
-\* hbase.thrift.spnego.principal
-
-
----
-
-* [HBASE-20590](https://issues.apache.org/jira/browse/HBASE-20590) | *Critical* | **REST Java client is not able to negotiate with the server in the secure mode**
-
-Adds a negotiation logic between a secure java REST client and server. After this jira the Java REST client will start responding to the Negotiate challenge sent by the server. Adds RESTDemoClient which can be used to verify whether the secure Java REST client works against secure REST server or not.
-
-
----
-
-* [HBASE-20634](https://issues.apache.org/jira/browse/HBASE-20634) | *Critical* | **Reopen region while server crash can cause the procedure to be stuck**
-
-A second attempt at fixing HBASE-20173. Fixes unfinished keeping of server state inside AM (ONLINE=\>SPLITTING=\>OFFLINE=\>null). Concurrent unassigns look at server state to figure if they should wait on SCP to wake them up or not.
-
-
----
-
-* [HBASE-20579](https://issues.apache.org/jira/browse/HBASE-20579) | *Minor* | **Improve snapshot manifest copy in ExportSnapshot**
-
-This patch adds an FSUtil.copyFilesParallel() to help copy files in parallel, and it will return all the paths of directories and files traversed. Thus when we copy manifest in ExportSnapshot, we can copy reference files concurrently and use the paths it returns to help setOwner and setPermission.
-The size of thread pool is determined by the configuration snapshot.export.copy.references.threads, and its default value is the number of runtime available processors.
-
-
----
-
-* [HBASE-18116](https://issues.apache.org/jira/browse/HBASE-18116) | *Major* | **Replication source in-memory accounting should not include bulk transfer hfiles**
-
-Before this change we would incorrectly include the size of enqueued store files for bulk replication in the calculation for determining whether or not to rate limit the transfer of WAL edits. Because bulk replication uses a separate and asynchronous mechanism for file transfer this could incorrectly limit the batch sizes for WAL replication if bulk replication in progress, with negative impact on latency and throughput.
-
-
----
-
-* [HBASE-20592](https://issues.apache.org/jira/browse/HBASE-20592) | *Minor* | **Create a tool to verify tables do not have prefix tree encoding**
-
-PreUpgradeValidator tool with DataBlockEncoding validator was added to verify cluster is upgradable to HBase 2.
-
-
----
-
-* [HBASE-20501](https://issues.apache.org/jira/browse/HBASE-20501) | *Blocker* | **Change the Hadoop minimum version to 2.7.1**
-
-<!-- markdown -->
-HBase is no longer able to maintain compatibility with Apache Hadoop versions that are no longer receiving updates. This release raises the minimum supported version to Hadoop 2.7.1. Downstream users are strongly advised to upgrade to the latest Hadoop 2.7 maintenance release.
-
-Downstream users of earlier HBase versions are similarly advised to upgrade to Hadoop 2.7.1+. When doing so, it is especially important to follow the guidance from [the HBase Reference Guide's Hadoop section](http://hbase.apache.org/book.html#hadoop) on replacing the Hadoop artifacts bundled with HBase.
-
-
----
-
-* [HBASE-20601](https://issues.apache.org/jira/browse/HBASE-20601) | *Minor* | **Add multiPut support and other miscellaneous to PE**
-
-1. Add multiPut support
-Set --multiPut=number to enable batchput(meanwhile, --autoflush need be set to false)
-
-2. Add Connection Count support
-Added a new parameter connCount to PE. set --connCount=2 means all threads will share 2 connections.
-oneCon option and connCount option shouldn't be set at the same time.
-
-3. Add avg RT and avg TPS/QPS statstic for all threads
-
-4. Delete some redundant code
-Now RandomWriteTest is inherited from SequentialWrite.
-
-
----
-
-* [HBASE-20544](https://issues.apache.org/jira/browse/HBASE-20544) | *Blocker* | **downstream HBaseTestingUtility fails with invalid port**
-
-<!-- markdown -->
-
-HBase now relies on an internal mechanism to determine when it is running a local hbase cluster meant for external interaction vs an encapsulated test. When created via the `HBaseTestingUtility`, ports for Master and RegionServer services and UIs will be set to random ports to allow for multiple parallel uses on a single machine. Normally when running a Standalone HBase Deployment (as described in the HBase Reference Guide) the ports will be picked according to the same defaults used in a full cluster set up. If you wish to instead use the random port assignment set `hbase.localcluster.assign.random.ports` to true.
-
-
----
-
-* [HBASE-20004](https://issues.apache.org/jira/browse/HBASE-20004) | *Minor* | **Client is not able to execute REST queries in a secure cluster**
-
-Added 'hbase.rest.http.allow.options.method' configuration property to allow user to decide whether Rest Server HTTP should allow OPTIONS method or not. By default it is enabled in HBase 2.1.0+ versions and in other versions it is disabled.
-Similarly 'hbase.thrift.http.allow.options.method' is added HBase 1.5, 2.1.0 and 3.0.0 versions. It is disabled by default.
-
-
----
-
-* [HBASE-20327](https://issues.apache.org/jira/browse/HBASE-20327) | *Minor* | **When qualifier is not specified, append and incr operation do not work (shell)**
-
-This change will enable users to perform append and increment operation with null qualifier via hbase-shell.
-
-
----
-
-* [HBASE-18842](https://issues.apache.org/jira/browse/HBASE-18842) | *Minor* | **The hbase shell clone\_snaphost command returns bad error message**
-
-<!-- markdown -->
-
-When attempting to clone a snapshot but using a namespace that does not exist, the HBase shell will now correctly report the exception as caused by the passed namespace. Previously, the shell would report that the problem was an unknown namespace but it would claim the user provided table name was not found as a namespace. Both before and after this change the shell properly used the passed namespace to attempt to handle the request.
-
-
----
-
-* [HBASE-20406](https://issues.apache.org/jira/browse/HBASE-20406) | *Major* | **HBase Thrift HTTP - Shouldn't handle TRACE/OPTIONS methods**
-
-<!-- markdown -->
-When configured to do thrift-over-http, the HBase Thrift API Server no longer accepts the HTTP methods TRACE nor OPTIONS.
-
-
----
-
-* [HBASE-20046](https://issues.apache.org/jira/browse/HBASE-20046) | *Major* | **Reconsider the implementation for serial replication**
-
-Now in replication we can make sure the order of pushing logs is same as the order of requests from client. Set the serial flag to true for a replication peer to enable this feature.
-
-
----
-
-* [HBASE-20159](https://issues.apache.org/jira/browse/HBASE-20159) | *Major* | **Support using separate ZK quorums for client**
-
-After HBASE-20159 we allow client to use different ZK quorums by introducing three new properties: hbase.client.zookeeper.quorum and hbase.client.zookeeper.property.clientPort to specify client zookeeper properties (note that the combination of these two properties should be different from the server ZK quorums), and hbase.client.zookeeper.observer.mode to indicate whether the client ZK nodes are in observer mode (false by default)
-
-HConstants.DEFAULT\_ZOOKEPER\_CLIENT\_PORT has been removed in HBase 3.0 and replaced by the correctly spelled DEFAULT\_ZOOKEEPER\_CLIENT\_PORT.
-
-
----
-
-* [HBASE-20242](https://issues.apache.org/jira/browse/HBASE-20242) | *Major* | **The open sequence number will grow if we fail to open a region after writing the max sequence id file**
-
-Now when opening a region, we will store the current max sequence id of the region to its max sequence id file instead of the 'next sequence id'. This could avoid the sequence id bumping when we fail to open a region, and also align to the behavior when we close a region.
-
-
----
-
-* [HBASE-19024](https://issues.apache.org/jira/browse/HBASE-19024) | *Critical* | **Configurable default durability for synchronous WAL**
-
-The default durability setting for the synchronous WAL is Durability.SYNC\_WAL, which triggers HDFS hflush() to flush edits to the datanodes. We also support Durability.FSYNC\_WAL, which instead triggers HDFS hsync() to flush \_and\_ fsync edits. This change introduces the new configuration setting "hbase.wal.hsync", defaulting to FALSE, that if set to TRUE changes the default durability setting for the synchronous WAL to  FSYNC\_WAL.
-
-
----
-
-* [HBASE-19389](https://issues.apache.org/jira/browse/HBASE-19389) | *Critical* | **Limit concurrency of put with dense (hundreds) columns to prevent write handler exhausted**
-
-After HBASE-19389 we introduced a RegionServer self-protection mechanism to prevent write handler getting exhausted by high concurrency put with dense columns, mainly through two new properties: hbase.region.store.parallel.put.limit.min.column.count to decide what kind of put (with how many columns within a single column family) to limit (100 by default) and hbase.region.store.parallel.put.limit to limit the concurrency (10 by default). There's another property for advanced user and please check source and javadoc of StoreHotnessProtector for more details.
-
-
----
-
-* [HBASE-20148](https://issues.apache.org/jira/browse/HBASE-20148) | *Major* | **Make serial replication as a option for a peer instead of a table**
-
-A new method setSerial has been added to the interface ReplicationPeerConfigBuilder which is marked as IA.Public. This interface is not supposed to be implemented by client code, but if you do, this will be an incompatible change as you need to add this method to your implementation too.
-
-
----
-
-* [HBASE-19397](https://issues.apache.org/jira/browse/HBASE-19397) | *Major* | **Design  procedures for ReplicationManager to notify peer change event from master**
-
-Introduce 5 procedures to do peer modifications:
-AddPeerProcedure
-RemovePeerProcedure
-UpdatePeerConfigProcedure
-EnablePeerProcedure
-DisablePeerProcedure
-
-The procedures are all executed with the following stage:
-1. Call pre CP hook, if an exception is thrown then give up
-2. Check whether the operation is valid, if not then give up
-3. Update peer storage. Notice that if we have entered this stage, then we can not rollback any more.
-4. Schedule sub procedures to refresh the peer config on every RS.
-5. Do post cleanup if any.
-6. Call post CP hook. The exception thrown will be ignored since we have already done the work.
-
-The procedure will hold an exclusive lock on the peer id, so now there is no concurrent modifications on a single peer.
-
-And now it is guaranteed that once the procedure is done, the peer modification has already taken effect on all RSes.
-
-Abstracte a storage layer for replication peer/queue manangement, and refactored the upper layer to remove zk related naming/code/comment.
-
-Add pre/postExecuteProcedures CP hooks to RegionServerObserver, and add permission check for executeProcedures method which requires the caller to be system user or super user.
-
-On rolling upgrade: just do not do any replication peer modifications during the rolling upgrading. There is no pb/layout changes on the peer/queue storage on zk.

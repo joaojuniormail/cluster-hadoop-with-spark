@@ -7,8 +7,8 @@ export HADOOP_COMMON_HOME=$HADOOP_HOME
 export HADOOP_HDFS_HOME=$HADOOP_HOME
 export HADOOP_INSTALL=$HADOOP_HOME
 export YARN_HOME=$HADOOP_HOME
-export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
-export HADOOP_OPTS="$HADOOP_OPTS -Djava.library.path=$HADOOP_HOME/lib/native"
+#export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
+#export HADOOP_OPTS="$HADOOP_OPTS -Djava.library.path=$HADOOP_HOME/lib/native"
 export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
 
 
@@ -16,10 +16,11 @@ export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
 #### SPARK
 
 export SPARK_HOME=/services/spark
-export LD_LIBRARY_PATH=$HADOOP_HOME/lib/native:$LD_LIBRARY_PATH
-export SPARK_DIST_CLASSPATH=$($HADOOP_HOME/bin/hadoop classpath)
+#export LD_LIBRARY_PATH=$HADOOP_HOME/lib/native:$LD_LIBRARY_PATH
+#export SPARK_DIST_CLASSPATH=$($HADOOP_HOME/bin/hadoop classpath)
 export PYSPARK_DRIVER_PYTHON=jupyter
 export PYSPARK_DRIVER_PYTHON_OPTS=notebook
+export PYSPARK_PYTHON=/usr/bin/python3
 export PATH=$PATH:$SPARK_HOME/bin
 
 
@@ -42,4 +43,5 @@ export PATH=$PATH:$HBASE_HOME/bin
 #### CONFIG MACHINE
 
 export JAVA_HOME=$(readlink -e /usr/bin/java | sed "s:/bin/java::")
+export MEMORY_RESOURCE=$(cat /proc/meminfo | head -2 | tail -1 | grep -oE '[0-9]+' | awk '{print $1/1024}')
 export PATH=$PATH:$JAVA_HOME/bin

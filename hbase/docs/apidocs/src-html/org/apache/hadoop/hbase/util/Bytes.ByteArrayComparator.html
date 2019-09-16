@@ -2137,7 +2137,7 @@
 <span class="sourceLineNo">2129</span>    int high = arr.length - 1;<a name="line.2129"></a>
 <span class="sourceLineNo">2130</span><a name="line.2130"></a>
 <span class="sourceLineNo">2131</span>    while (low &lt;= high) {<a name="line.2131"></a>
-<span class="sourceLineNo">2132</span>      int mid = (low + high) &gt;&gt;&gt; 1;<a name="line.2132"></a>
+<span class="sourceLineNo">2132</span>      int mid = low + ((high - low) &gt;&gt; 1);<a name="line.2132"></a>
 <span class="sourceLineNo">2133</span>      // we have to compare in this order, because the comparator order<a name="line.2133"></a>
 <span class="sourceLineNo">2134</span>      // has special logic when the 'left side' is a special key.<a name="line.2134"></a>
 <span class="sourceLineNo">2135</span>      int cmp = Bytes.BYTES_RAWCOMPARATOR<a name="line.2135"></a>
@@ -2176,7 +2176,7 @@
 <span class="sourceLineNo">2168</span>    int high = arr.length - 1;<a name="line.2168"></a>
 <span class="sourceLineNo">2169</span>    KeyValue.KeyOnlyKeyValue r = new KeyValue.KeyOnlyKeyValue();<a name="line.2169"></a>
 <span class="sourceLineNo">2170</span>    while (low &lt;= high) {<a name="line.2170"></a>
-<span class="sourceLineNo">2171</span>      int mid = (low+high) &gt;&gt;&gt; 1;<a name="line.2171"></a>
+<span class="sourceLineNo">2171</span>      int mid = low + ((high - low) &gt;&gt; 1);<a name="line.2171"></a>
 <span class="sourceLineNo">2172</span>      // we have to compare in this order, because the comparator order<a name="line.2172"></a>
 <span class="sourceLineNo">2173</span>      // has special logic when the 'left side' is a special key.<a name="line.2173"></a>
 <span class="sourceLineNo">2174</span>      r.setKey(arr[mid], 0, arr[mid].length);<a name="line.2174"></a>
@@ -2212,7 +2212,7 @@
 <span class="sourceLineNo">2204</span>    int low = 0;<a name="line.2204"></a>
 <span class="sourceLineNo">2205</span>    int high = arr.length - 1;<a name="line.2205"></a>
 <span class="sourceLineNo">2206</span>    while (low &lt;= high) {<a name="line.2206"></a>
-<span class="sourceLineNo">2207</span>      int mid = (low+high) &gt;&gt;&gt; 1;<a name="line.2207"></a>
+<span class="sourceLineNo">2207</span>      int mid = low + ((high - low) &gt;&gt; 1);<a name="line.2207"></a>
 <span class="sourceLineNo">2208</span>      // we have to compare in this order, because the comparator order<a name="line.2208"></a>
 <span class="sourceLineNo">2209</span>      // has special logic when the 'left side' is a special key.<a name="line.2209"></a>
 <span class="sourceLineNo">2210</span>      int cmp = comparator.compare(key, arr[mid]);<a name="line.2210"></a>
@@ -2386,7 +2386,7 @@
 <span class="sourceLineNo">2378</span>    int high = toIndex - 1;<a name="line.2378"></a>
 <span class="sourceLineNo">2379</span><a name="line.2379"></a>
 <span class="sourceLineNo">2380</span>    while (low &lt;= high) {<a name="line.2380"></a>
-<span class="sourceLineNo">2381</span>      int mid = (low + high) &gt;&gt;&gt; 1;<a name="line.2381"></a>
+<span class="sourceLineNo">2381</span>      int mid = low + ((high - low) &gt;&gt; 1);<a name="line.2381"></a>
 <span class="sourceLineNo">2382</span>      int midVal = a[mid] &amp; 0xff;<a name="line.2382"></a>
 <span class="sourceLineNo">2383</span><a name="line.2383"></a>
 <span class="sourceLineNo">2384</span>      if (midVal &lt; unsignedKey) {<a name="line.2384"></a>

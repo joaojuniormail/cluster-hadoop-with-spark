@@ -44,7 +44,7 @@
 
 	<property>
 		<name>hbase.zookeeper.quorum</name>
-		<value>hadoopmaster,abutre,anarquia</value>
+		<value>hadoopmaster,abutre,anarquia,hadoopnodevm</value>
 	</property>
 
 	<property>

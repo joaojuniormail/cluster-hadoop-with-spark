@@ -103,7 +103,17 @@ if [[ $ACTION == *"config"* ]]; then
 		FILE=$(echo $FILE_DIR/$FILE_NAME)
 		rm $BASE_DIR/$FILE
 		cp $BASE_DIR/$TEMPLATE $BASE_DIR/$FILE
-		sed -i -e "s;%TEMPLATE_JAVA_HOME%;$JAVA_HOME;g" -e "s;%COUNT%;$COUNT;g" -e "s;%TEMPLATE_NAMENODE%;$TEMPLATE_NAMENODE;g" -e "s;%TEMPLATE_DATANODES%;$TEMPLATE_DATANODES;g" "$FILE"
+		
+		#MEMORY CONFIG
+		MEMORY_RESOURCE=$(cat /proc/meminfo | head -2 | tail -1 | grep -oE '[0-9]+' | awk '{print $1/1024}')
+		
+		sed -i \
+		-e "s;%TEMPLATE_JAVA_HOME%;$JAVA_HOME;g" \
+		-e "s;%COUNT%;$COUNT;g" \
+		-e "s;%TEMPLATE_NAMENODE%;$TEMPLATE_NAMENODE;g" \
+		-e "s;%TEMPLATE_DATANODES%;$TEMPLATE_DATANODES;g" \
+		-e "s;%MEMORY_RESOURCE%;${MEMORY_RESOURCE%.*};g" \
+		"$FILE"
 		echo "File Created: $FILE"
 
 	done
@@ -158,6 +168,7 @@ fi
 # LOOP IN DATANODES
 COUNT=$(cat $BASE_DIR/datanode | wc -l)
 NUM_START=1
+echo "$COUNT datanodes"
 
 if [ ! -z "$2" ]; then
 
@@ -207,7 +218,6 @@ for ((index=$NUM_START; $index<=$COUNT; index++));do
 		# Config
 		scp /services/* hadoop@$DATANODE:/services/;
 		
-
 		# Enviornments
 		scp /services/.bashrc hadoop@$DATANODE:/services/;
 		scp -rp /services/scripts hadoop@$DATANODE:/services/;
@@ -218,6 +228,7 @@ for ((index=$NUM_START; $index<=$COUNT; index++));do
 		ssh -t hadoop@$DATANODE 'rm -r /services/hadoop/etc/hadoop/* && rm -r /services/hadoop/logs/*';
 		scp -rp /services/hadoop/etc/hadoop/* hadoop@$DATANODE:/services/hadoop/etc/hadoop/;
 		ssh -t hadoop@$DATANODE 'sed -e "s;%TEMPLATE_JAVA_HOME%;$JAVA_HOME;g" /services/hadoop/etc/hadoop/hadoop-env.template.sh > /services/hadoop/etc/hadoop/hadoop-env.sh'
+		ssh -t hadoop@$DATANODE 'sed -e "s;%TEMPLATE_NAMENODE%;$TEMPLATE_NAMENODE;g" -e "s;%MEMORY_RESOURCE%;${MEMORY_RESOURCE%.*};g" /services/hadoop/etc/hadoop/yarn-site.template.xml > /services/hadoop/etc/hadoop/yarn-site.xml'
 		ssh -t hadoop@$DATANODE 'sudo chmod 777 -R /services/hdfs'
 
 		# Spark config
@@ -244,13 +255,22 @@ for ((index=$NUM_START; $index<=$COUNT; index++));do
 		echo "######## CLEAR #########"
 		
 		# Clear datanode
-		ssh -t hadoop@$DATANODE 'rm -r /services/hdfs/*';
+		ssh -t hadoop@$DATANODE 'rm -r /services/hdfs/*;';
+		ssh -t hadoop@$DATANODE 'rm -r /services/hadoop/logs/*;rm -r /services/spark/logs/*;rm -r /services/hive/logs/*;rm -r /services/hbase/logs/*'
 
 	fi
 	
 done
 
 echo "################# FINISH DATANODES LOOP ################# "
+
+if [[ $ACTION == *"clear"* ]]; then
+	rm -r /services/hdfs/*
+	rm -r /services/hadoop/logs/*
+	rm -r /services/spark/logs/*
+	rm -r /services/hive/logs/*
+	rm -r /services/hbase/logs/*
+fi
 
 # CONFIGURE HDFS
 

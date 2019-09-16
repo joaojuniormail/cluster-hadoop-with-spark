@@ -3,3 +3,4 @@ hadoop/etc/hadoop/yarn-site.template.xml
 hbase/conf/hbase-site.template.xml
 hive/conf/hive-site.template.xml
 spark/conf/spark-env.template.sh
+spark/conf/spark-defaults.template.conf
