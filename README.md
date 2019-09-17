@@ -1,10 +1,10 @@
 ## Links:
 
-- http://nodemaster:50070 (Hadoop Informations)
-- http://nodemaster:10002 (HiveServer2)
-- http://nodemaster:16010 (HBase)
-- http://nodemaster:8080 (Spark Web UI)
-- http://nodemaster:18080 (Spark History)
+- http://localhost:50070 (Hadoop Informations)
+- http://localhost:10002 (HiveServer2)
+- http://localhost:16010 (HBase)
+- http://localhost:8080 (Spark Web UI)
+- http://localhost:18080 (Spark History)
 
 ## Install commands
 

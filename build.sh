@@ -205,7 +205,7 @@ for ((index=$NUM_START; $index<=$COUNT; index++));do
 	# COPY ALL
 
 	if [[ $ACTION == *"copy"* ]]; then
-		ssh -t hadoop@$DATANODE 'rm -R /services; sudo mkdir /services; sudo chown hadoop:hadoop /services'
+		ssh -t hadoop@$DATANODE 'rm -R /services; sudo mkdir /services; sudo chown hadoop:hadoop -R /services'
 		scp -r /services hadoop@$DATANODE:/
 	fi
 
@@ -293,5 +293,7 @@ if [[ $ACTION == *"dfs"* ]]; then
 	hdfs dfs -chmod g+w /tmp
 	hdfs dfs -chmod g+w /user/hive/warehouse
 	hdfs dfs -chmod g+w /hbase
+
+	/services/hadoop/sbin/stop-dfs.sh
 
 fi

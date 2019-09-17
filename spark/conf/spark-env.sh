@@ -27,6 +27,7 @@
 # - SPARK_PUBLIC_DNS, to set the public dns name of the driver program
 export HADOOP_HOME=/services/hadoop
 export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
+export YARN_CONF_DIR=$HADOOP_HOME/etc/hadoop
 
 # Options read by executors and drivers running inside the cluster
 # - SPARK_LOCAL_IP, to set the IP address Spark binds to on this node
