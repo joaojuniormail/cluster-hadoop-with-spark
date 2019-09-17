@@ -208,7 +208,7 @@ for ((index=$NUM_START; $index<=$COUNT; index++));do
 
 	if [[ $ACTION == *"copy"* ]]; then
 		ssh -t hadoop@$DATANODE 'rm -R /services; sudo mkdir /services; sudo chown hadoop:hadoop -R /services'
-		scp -r /services hadoop@$DATANODE:/
+		scp -r /services/ hadoop@$DATANODE:/services
 	fi
 
 	# COPY CONFIG FILES
@@ -306,6 +306,7 @@ fi
 
 if [[ $ACTION == *"spark"* ]]; then
 
+	hdfs dfs -rm /spark-jars/*
 	hdfs dfs -put /services/spark/jars/ /spark-jars
 
 fi
