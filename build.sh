@@ -307,6 +307,9 @@ fi
 if [[ $ACTION == *"spark"* ]]; then
 
 	cp -r /services/.jupyter /home/hadoop/
+	rm /home/hadoop/.ipython/profile_default/*.py
+	ipython profile create
+	echo "c.Completer.use_jedi = False" >> /home/hadoop/.ipython/profile_default/ipython_config.py
 	hdfs dfs -rm /spark-jars/*
 	hdfs dfs -put /services/spark/jars/ /spark-jars
 

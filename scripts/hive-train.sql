@@ -49,5 +49,5 @@ CREATE TABLE santander_train(
   ,ind_nom_pens_ult1     TINYINT 
   ,ind_recibo_ult1       TINYINT 
 ) ROW FORMAT DELIMITED FIELDS TERMINATED BY "," ESCAPED BY '\\'
-tblproperties("skip.header.line.count"="1");
+tblproperties("skip.header.line.count"="1", "transactional"="true");
 LOAD DATA LOCAL INPATH '/home/hadoop/train.csv' OVERWRITE INTO TABLE santander_train;

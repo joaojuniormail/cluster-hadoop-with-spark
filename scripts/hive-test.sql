@@ -25,5 +25,5 @@ CREATE TABLE santander_test(
   ,renta                 DECIMAL(38,2)
   ,segmento              STRING
 ) ROW FORMAT DELIMITED FIELDS TERMINATED BY "," ESCAPED BY '\\'
-tblproperties("skip.header.line.count"="1");
+tblproperties("skip.header.line.count"="1", "transactional"="true");
 LOAD DATA LOCAL INPATH '/home/hadoop/test.csv' OVERWRITE INTO TABLE santander_test;

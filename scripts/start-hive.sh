@@ -24,9 +24,9 @@ fi
 
 if [ -d "/services/metastore_db" ]; then
     #$HIVE_HOME/bin/hiveserver2 &
-    $HIVE_HOME/bin/hive --service metastore &
+    nohup $HIVE_HOME/bin/hive --service metastore & >/dev/null &
     sleep 5
-    $HIVE_HOME/bin/hive --service hiveserver2 &
+    nohup $HIVE_HOME/bin/hive --service hiveserver2 & >/dev/null &
     #$HIVE_HOME/bin/hive --service hiveserver2 --hiveconf hive.server2.thrift.port=10000 --hiveconf hive.root.logger=INFO,console
     #$HIVE_HOME/bin/hiveserver2 &
 fi
