@@ -84,9 +84,9 @@ cp $BASE_DIR/datanode $BASE_DIR/hbase/conf/
 rm $BASE_DIR/hbase/conf/regionservers
 mv $BASE_DIR/hbase/conf/datanode $BASE_DIR/hbase/conf/regionservers
 
-cp $BASE_DIR/datanode $BASE_DIR/spark/conf/
+#cp $BASE_DIR/datanode $BASE_DIR/spark/conf/
 rm $BASE_DIR/spark/conf/slaves
-mv $BASE_DIR/spark/conf/datanode $BASE_DIR/spark/conf/slaves
+#mv $BASE_DIR/spark/conf/datanode $BASE_DIR/spark/conf/slaves
 
 
 
@@ -132,7 +132,7 @@ if [[ $ACTION == *"config"* ]]; then
 	# To Spark
 	cp /services/hadoop/etc/hadoop/core-site.xml /services/spark/conf/
 	cp /services/hadoop/etc/hadoop/hdfs-site.xml /services/spark/conf/
-	cp /services/hadoop/etc/hadoop/yarn-site.xml /services/spark/conf/
+	#cp /services/hadoop/etc/hadoop/yarn-site.xml /services/spark/conf/
 	cp /services/hive/conf/hive-site.xml /services/spark/conf/
 	cp /services/hbase/conf/hbase-site.xml /services/spark/conf/
 

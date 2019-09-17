@@ -6,3 +6,4 @@ metastore_db
 *.log
 *.out
 spark/projects/*
+spark/work
