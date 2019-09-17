@@ -3,4 +3,5 @@ metastore_db/*
 !hdfs/service.txt
 metastore_db
 **/logs/*
+*.log
 spark/projects/*
