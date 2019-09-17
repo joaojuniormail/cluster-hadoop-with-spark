@@ -2,4 +2,5 @@
 
 $SPARK_HOME/sbin/stop-all.sh
 
-jupyter notebook stop 8888
+pid=$(pgrep -f jupyter)
+kill -9 $pid

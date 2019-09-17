@@ -2,4 +2,4 @@
 
 $SPARK_HOME/sbin/start-all.sh
 
-nohup pyspark & >/dev/null &
+nohup pyspark > /services/notebook.log &
