@@ -15,25 +15,37 @@
 <configuration>
 
 <!-- Site specific YARN configuration properties -->
-    <property>
-            <name>yarn.acl.enable</name>
-            <value>0</value>
-    </property>
+        <property>
+                <name>yarn.acl.enable</name>
+                <value>0</value>
+        </property>
 
-    <property>
-            <name>yarn.resourcemanager.hostname</name>
-            <value>nodemaster</value>
-    </property>
+        <property>
+                <name>yarn.resourcemanager.hostname</name>
+                <value>hadoopmaster</value>
+        </property>
 
-    <property>
-            <name>yarn.nodemanager.aux-services</name>
-            <value>mapreduce_shuffle</value>
-    </property>
+        <property>
+                <name>yarn.nodemanager.aux-services</name>
+                <value>mapreduce_shuffle</value>
+        </property>
+        <property>
+                <name>yarn.nodemanager.resource.memory-mb</name>
+                <value>5003</value>
+        </property>
 
-    <property>
-            <name>yarn.resourcemanager.scheduler.class</name>
-            <value>org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.FairScheduler</value>
-    </property>
+        <property>
+                <name>yarn.scheduler.maximum-allocation-mb</name>
+                <value>5003</value>
+        </property>
 
+        <property>
+                <name>yarn.scheduler.minimum-allocation-mb</name>
+                <value>50</value>
+        </property>
 
+        <property>
+                <name>yarn.nodemanager.vmem-check-enabled</name>
+                <value>false</value>
+        </property>
 </configuration>

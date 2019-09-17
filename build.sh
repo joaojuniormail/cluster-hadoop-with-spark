@@ -131,6 +131,7 @@ if [[ $ACTION == *"config"* ]]; then
 	# To Spark
 	cp /services/hadoop/etc/hadoop/core-site.xml /services/spark/conf/
 	cp /services/hadoop/etc/hadoop/hdfs-site.xml /services/spark/conf/
+	cp /services/hadoop/etc/hadoop/yarn-site.xml /services/spark/conf/
 	cp /services/hive/conf/hive-site.xml /services/spark/conf/
 	cp /services/hbase/conf/hbase-site.xml /services/spark/conf/
 
