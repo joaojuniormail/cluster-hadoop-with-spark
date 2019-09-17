@@ -306,6 +306,7 @@ fi
 
 if [[ $ACTION == *"spark"* ]]; then
 
+	cp -r /services/.jupyter /home/hadoop/
 	hdfs dfs -rm /spark-jars/*
 	hdfs dfs -put /services/spark/jars/ /spark-jars
 

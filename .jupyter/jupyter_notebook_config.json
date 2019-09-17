@@ -1,0 +1,6 @@
+{
+  "NotebookApp": {
+    "ip": "0.0.0.0",
+    "notebook_dir": "/services/spark/projects"
+  }
+}
