@@ -16,8 +16,8 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HADOOP_HOME/lib/native
 #### SPARK
 
 export SPARK_HOME=/services/spark
-export PYSPARK_DRIVER_PYTHON=ipython
-export PYSPARK_DRIVER_PYTHON_OPTS=""
+export PYSPARK_DRIVER_PYTHON=jupyter
+export PYSPARK_DRIVER_PYTHON_OPTS=notebook
 export PATH=$PATH:$SPARK_HOME/bin
 
 
