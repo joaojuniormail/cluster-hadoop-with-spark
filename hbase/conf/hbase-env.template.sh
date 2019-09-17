@@ -27,6 +27,8 @@
 # The java implementation to use.  Java 1.8+ required.
 export JAVA_HOME=%TEMPLATE_JAVA_HOME%
 
+export LD_LIBRARY_PATH=$HADOOP_HOME/lib/native
+
 # Extra Java CLASSPATH elements.  Optional.
 #export HBASE_CLASSPATH=/services/hadoop/etc/hadoop/
 

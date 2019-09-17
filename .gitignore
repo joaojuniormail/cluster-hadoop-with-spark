@@ -1,6 +1,5 @@
 hdfs/*
 metastore_db/*
 !hdfs/service.txt
-!metastore_db/service.txt
-*.log
-*.out
+metastore_db
+**/logs/*

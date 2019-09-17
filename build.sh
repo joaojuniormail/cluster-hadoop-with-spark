@@ -54,6 +54,7 @@ Options:
 - config : copy all config files to all datanodes
 - clear : remove all files in hdfs path
 - dfs : create all paths in hdfs
+- spark : copy all jars spark to hdfs
 
 "
 	exit
@@ -284,17 +285,27 @@ if [[ $ACTION == *"dfs"* ]]; then
 	hdfs dfs -rm -R /tmp
 	hdfs dfs -rm -R /user
 	hdfs dfs -rm -R /hbase
+	hdfs dfs -rm -R /spark-jars
 
 	# Create paths in hdfs
 	hdfs dfs -mkdir /tmp
 	hdfs dfs -mkdir -p /user/hive/warehouse
 	hdfs dfs -mkdir /hbase
+	hdfs dfs -mkdir /spark-jars
 
-	# Change permission in hdfs
+
+	hdfs dfs -mkdir /hbase	# Change permission in hdfs
 	hdfs dfs -chmod g+w /tmp
 	hdfs dfs -chmod g+w /user/hive/warehouse
 	hdfs dfs -chmod g+w /hbase
+	hdfs dfs -chmod g+w /spark-jars
 
 	/services/hadoop/sbin/stop-dfs.sh
+
+fi
+
+if [[ $ACTION == *"spark"* ]]; then
+
+	hdfs dfs -put /services/spark/jars/ /spark-jars
 
 fi
