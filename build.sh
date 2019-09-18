@@ -114,6 +114,7 @@ if [[ $ACTION == *"config"* ]]; then
 		-e "s;%TEMPLATE_NAMENODE%;$TEMPLATE_NAMENODE;g" \
 		-e "s;%TEMPLATE_DATANODES%;$TEMPLATE_DATANODES;g" \
 		-e "s;%MEMORY_RESOURCE%;${MEMORY_RESOURCE%.*};g" \
+		-e "s;%NAMENODE_IP%;$NAMENODE_IP;g" \
 		"$FILE"
 		echo "File Created: $FILE"
 

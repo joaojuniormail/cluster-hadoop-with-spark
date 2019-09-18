@@ -22,7 +22,7 @@
 
         <property>
                 <name>yarn.resourcemanager.hostname</name>
-                <value>hadoopmaster</value>
+                <value>172.29.70.242</value>
         </property>
 
         <property>
@@ -31,17 +31,17 @@
         </property>
         <property>
                 <name>yarn.nodemanager.resource.memory-mb</name>
-                <value>1531</value>
+                <value>3454</value>
         </property>
 
         <property>
                 <name>yarn.scheduler.maximum-allocation-mb</name>
-                <value>1531</value>
+                <value>3454</value>
         </property>
 
         <property>
                 <name>yarn.scheduler.minimum-allocation-mb</name>
-                <value>50</value>
+                <value>128</value>
         </property>
 
         <property>

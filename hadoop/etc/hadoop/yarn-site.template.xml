@@ -22,7 +22,7 @@
 
         <property>
                 <name>yarn.resourcemanager.hostname</name>
-                <value>%TEMPLATE_NAMENODE%</value>
+                <value>%NAMENODE_IP%</value>
         </property>
 
         <property>
@@ -41,7 +41,7 @@
 
         <property>
                 <name>yarn.scheduler.minimum-allocation-mb</name>
-                <value>50</value>
+                <value>128</value>
         </property>
 
         <property>
