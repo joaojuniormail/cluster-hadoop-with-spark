@@ -304,8 +304,6 @@ if [[ $ACTION == *"dfs"* ]]; then
 	hdfs dfs -chmod -R 777 /spark-jars
 	hdfs dfs -chmod -R 777 /spark-logs
 
-	/services/hadoop/sbin/stop-dfs.sh
-
 fi
 
 if [[ $ACTION == *"spark"* ]]; then
@@ -314,5 +312,7 @@ if [[ $ACTION == *"spark"* ]]; then
 	rm /home/hadoop/.ipython/profile_default/*.py
 	ipython profile create
 	echo "c.Completer.use_jedi = False" >> /home/hadoop/.ipython/profile_default/ipython_config.py
-
+	/services/hadoop/sbin/start-dfs.sh
+	hdfs dfs -rm /spark-jars/*
+	hdfs dfs -put /services/spark/jars/* /spark-jars/
 fi
