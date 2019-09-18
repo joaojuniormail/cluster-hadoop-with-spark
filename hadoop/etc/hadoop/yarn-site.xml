@@ -31,12 +31,12 @@
         </property>
         <property>
                 <name>yarn.nodemanager.resource.memory-mb</name>
-                <value>1058</value>
+                <value>4078</value>
         </property>
 
         <property>
                 <name>yarn.scheduler.maximum-allocation-mb</name>
-                <value>1058</value>
+                <value>4078</value>
         </property>
 
         <property>
