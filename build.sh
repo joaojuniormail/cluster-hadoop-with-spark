@@ -286,19 +286,22 @@ if [[ $ACTION == *"dfs"* ]]; then
 	hdfs dfs -rm -R /user
 	hdfs dfs -rm -R /hbase
 	hdfs dfs -rm -R /spark-jars
+	hdfs dfs -rm -R /spark-logs
 
 	# Create paths in hdfs
 	hdfs dfs -mkdir /tmp
 	hdfs dfs -mkdir -p /user/hive/warehouse
 	hdfs dfs -mkdir /hbase
 	hdfs dfs -mkdir /spark-jars
+	hdfs dfs -mkdir /spark-logs
 
 
 	hdfs dfs -mkdir /hbase	# Change permission in hdfs
-	hdfs dfs -chmod g+w /tmp
-	hdfs dfs -chmod g+w /user/hive/warehouse
-	hdfs dfs -chmod g+w /hbase
-	hdfs dfs -chmod g+w /spark-jars
+	hdfs dfs -chmod -R 777 /tmp
+	hdfs dfs -chmod -R 777 /user/hive/warehouse
+	hdfs dfs -chmod -R 777 /hbase
+	hdfs dfs -chmod -R 777 /spark-jars
+	hdfs dfs -chmod -R 777 /spark-logs
 
 	/services/hadoop/sbin/stop-dfs.sh
 
@@ -310,7 +313,5 @@ if [[ $ACTION == *"spark"* ]]; then
 	rm /home/hadoop/.ipython/profile_default/*.py
 	ipython profile create
 	echo "c.Completer.use_jedi = False" >> /home/hadoop/.ipython/profile_default/ipython_config.py
-	hdfs dfs -rm /spark-jars/*
-	hdfs dfs -put /services/spark/jars/ /spark-jars
 
 fi

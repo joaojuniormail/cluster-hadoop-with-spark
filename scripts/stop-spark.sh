@@ -7,3 +7,5 @@ pid=$(pgrep -f jupyter)
 if [ ! -z "$pid" ]; then
     kill -9 $pid
 fi
+
+$SPARK_HOME/sbin/stop-history-server.sh
