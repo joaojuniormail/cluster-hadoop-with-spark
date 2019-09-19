@@ -40,7 +40,7 @@
 
     <property>
             <name>dfs.replication</name>
-            <value>0</value>
+            <value>1</value>
     </property>
 
 </configuration>
