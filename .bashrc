@@ -2,6 +2,7 @@
 
 export HADOOP_HOME=/services/hadoop
 export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
+export HADOOP_CLASSPATH=$HADOOP_CLASSPATH:$HADOOP_HOME/share/hadoop/tools/lib/*
 export HADOOP_MAPRED_HOME=$HADOOP_HOME 
 export HADOOP_COMMON_HOME=$HADOOP_HOME
 export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
@@ -35,6 +36,11 @@ export PATH=$PATH:$HIVE_HOME/bin
 
 export HBASE_HOME=/services/hbase
 export PATH=$PATH:$HBASE_HOME/bin
+
+#### SQOOP
+
+export SQOOP_HOME=/services/sqoop
+export PATH=$PATH:$SQOOP_HOME/bin
 
 
 
